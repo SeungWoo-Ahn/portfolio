@@ -3,6 +3,7 @@ import { authRepository } from "../../data/authRepository";
 import type { LoginRequest } from "../../types/domain/authTypes";
 import { useForm } from "react-hook-form";
 import Input from "../Input/Input";
+import SubmitButton from "../Button/SubmitButton";
 
 interface LoginFormDialogProps {
     open: boolean;
@@ -41,7 +42,7 @@ const LoginFormDialog = ({ open, dismiss }: LoginFormDialogProps) => {
                         required: true
                     })}
                 />
-                <input type="submit" />
+                <SubmitButton />
             </form>
         </dialog>
     );
