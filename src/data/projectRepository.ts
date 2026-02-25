@@ -1,0 +1,56 @@
+import type { Project, ProjectCreateRequest } from "../types/domain/projectTypes";
+import { supabaseClient } from "./supabase";
+
+const TABLE_NAME = 'projects';
+
+interface ProjectRepository {
+    createProject(request: ProjectCreateRequest): Promise<void>;
+
+    getProjects(): Promise<Project[]>;
+
+    getProject(id: number): Promise<Project>;
+
+    updateProject(id: number, request: ProjectCreateRequest): Promise<void>;
+
+    deleteProject(id: number): Promise<void>;
+}
+
+export const projectRepository: ProjectRepository = {
+    createProject: async (request: ProjectCreateRequest): Promise<void> => {
+        const { error } = await supabaseClient
+            .from(TABLE_NAME)
+            .insert(request);
+        if (error) throw error;
+    },
+    getProjects: async (): Promise<Project[]> => {
+        const { data, error } = await supabaseClient
+            .from(TABLE_NAME)
+            .select('*')
+            .order('start_date', { ascending: false });
+        if (error) throw error;
+        return data as Project[];
+    },
+    getProject: async (id: number): Promise<Project> => {
+        const { data, error } = await supabaseClient
+            .from(TABLE_NAME)
+            .select('*')
+            .eq('id', id)
+            .single();
+        if (error) throw error;
+        return data as Project;
+    },
+    updateProject: async (id: number, request: ProjectCreateRequest): Promise<void> => {
+        const { error } = await supabaseClient
+            .from(TABLE_NAME)
+            .update(request)
+            .eq('id', id);
+        if (error) throw error;
+    },
+    deleteProject: async (id: number): Promise<void> => {
+        const { error } = await supabaseClient
+            .from(TABLE_NAME)
+            .delete()
+            .eq('id', id);
+        if (error) throw error;
+    }
+}
