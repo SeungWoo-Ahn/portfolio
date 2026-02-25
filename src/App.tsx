@@ -14,10 +14,10 @@ function App() {
         <Header />
         <Routes>
           <Route path={PATHS.HOME} element={<Home />} />
-          <Route path={PATHS.BLOG_POST} element={<ProjectPost />} />
-          <Route path={PATHS.BLOG_DETAIL()} element={<ProjectDetail />} />
+          <Route path={PATHS.PROJECT_POST} element={<ProjectPost />} />
+          <Route path={PATHS.PROJECT_DETAIL()} element={<ProjectDetail />} />
           <Route path={PATHS.BLOG_POST} element={<BlogPost />} />
-          <Route path={PATHS.PROJECT_DETAIL()} element={<BlogDetail />} />
+          <Route path={PATHS.BLOG_DETAIL()} element={<BlogDetail />} />
         </Routes>
       </BrowserRouter>
     </>
