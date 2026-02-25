@@ -6,7 +6,7 @@ interface InputProps {
     registration: UseFormRegisterReturn;
 }
 
-const Input = ({ type = 'text', registration }: InputProps) => {
+const Input = ({ type, registration }: InputProps) => {
     return (
         <input type={type} {...registration}/>
     );
