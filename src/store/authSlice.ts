@@ -17,7 +17,7 @@ const authSlice = createSlice({
             if (action.payload) {
                 state.user = { ...action.payload };
             } else {
-                state = initialState;
+                return initialState;
             }
         }
     }
