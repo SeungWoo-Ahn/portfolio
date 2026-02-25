@@ -1,7 +1,7 @@
 export const PATHS = {
     HOME: '/',
     PROJECT_POST: '/projects/new',
-    PROJECT_DETAIL: (slug: string = ':slug') => `/projects/${slug}`,
+    PROJECT_DETAIL: (id: number | string = ':id') => `/projects/${id}`,
     BLOG_POST: '/blogs/new',
-    BLOG_DETAIL: (slug: string = ':slug') => `/blogs/${slug}`
+    BLOG_DETAIL: (id: number | string = ':id') => `/blogs/${id}`
 }
