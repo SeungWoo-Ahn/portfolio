@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authRepository } from "../../data/authRepository";
 import type { LoginRequest } from "../../types/domain/authTypes";
 import { useForm } from "react-hook-form";
+import Input from "../Input/Input";
 
 interface LoginFormDialogProps {
     open: boolean;
@@ -9,11 +10,14 @@ interface LoginFormDialogProps {
 }
 
 const LoginFormDialog = ({ open, dismiss }: LoginFormDialogProps) => {
-    const { register, handleSubmit } = useForm<LoginRequest>();
+    const { register, handleSubmit, reset } = useForm<LoginRequest>();
 
     const mututation = useMutation({
         mutationFn: (request: LoginRequest) => authRepository.login(request),
-        onSuccess: dismiss,
+        onSuccess: () => {
+            dismiss();
+            reset();
+        },
         onError: (error) => { alert(error.message) }
     });
 
@@ -24,17 +28,19 @@ const LoginFormDialog = ({ open, dismiss }: LoginFormDialogProps) => {
     return (
         <dialog open={open}>
             <form onSubmit={handleSubmit(onLogin)}>
-                <input
-                    type="email"
-                    {...register('email',
-                        {
-                            required: true,
-                            pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        })} />
-                <input
-                    type="password"
-                    {...register('password',
-                        { required: true })} />
+                <Input 
+                    type='email'
+                    registration={register('email', {
+                        required: true,
+                        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    })}
+                />
+                <Input
+                    type='password'
+                    registration={register('password', {
+                        required: true
+                    })}
+                />
                 <input type="submit" />
             </form>
         </dialog>
