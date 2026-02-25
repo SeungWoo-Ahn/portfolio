@@ -14,13 +14,11 @@ const ProjectPost = () => {
         onError: (error) => { alert(error.message) }
     });
 
-    /**
     const updateMutation = useMutation({
-        mutationFn: (request: ProjectCreateRequest) => projectRepository.updateProject(id, request),
+        mutationFn: ({ id, request }: { id: number, request: ProjectCreateRequest }) => projectRepository.updateProject(id, request),
         onError: (error) => { alert(error.message) }
     });
-    */
-
+    
     const onSubmit = (request: ProjectCreateRequest) => {
         const payload: ProjectCreateRequest = {
             ...request,
@@ -58,7 +56,12 @@ const ProjectPost = () => {
             />
             <Input
                 type='date'
-                registration={register('end_date')}
+                registration={register('end_date', {
+                    validate: (value, formValues) => {
+                        if (!value) return true;
+                        return value >= formValues.start_date || '종료일은 시작일보다 빠를 수 없습니다.'
+                    }
+                })}
             />
             <Input
                 type='text'
