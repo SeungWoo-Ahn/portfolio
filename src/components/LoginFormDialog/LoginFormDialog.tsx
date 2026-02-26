@@ -31,6 +31,7 @@ const LoginFormDialog = ({ open, dismiss }: LoginFormDialogProps) => {
             <form onSubmit={handleSubmit(onLogin)}>
                 <Input 
                     type='email'
+                    placheholder='이메일'
                     registration={register('email', {
                         required: true,
                         pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -38,11 +39,12 @@ const LoginFormDialog = ({ open, dismiss }: LoginFormDialogProps) => {
                 />
                 <Input
                     type='password'
+                    placheholder='비밀번호'
                     registration={register('password', {
                         required: true
                     })}
                 />
-                <SubmitButton />
+                <SubmitButton text='로그인' isLoading={mututation.isPending}/>
             </form>
         </dialog>
     );

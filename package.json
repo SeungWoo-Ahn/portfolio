@@ -13,9 +13,11 @@
     "@reduxjs/toolkit": "^2.11.2",
     "@supabase/supabase-js": "^2.97.0",
     "@tanstack/react-query": "^5.90.21",
+    "browser-image-compression": "^2.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.71.2",
+    "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.13.1"
   },

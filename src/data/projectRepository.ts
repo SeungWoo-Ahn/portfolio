@@ -1,7 +1,7 @@
 import type { Project, ProjectCreateRequest } from "../types/domain/projectTypes";
 import { supabaseClient } from "./supabase";
 
-const TABLE_NAME = 'projects';
+export const PROJECT_TABLE_NAME = 'projects';
 
 interface ProjectRepository {
     createProject(request: ProjectCreateRequest): Promise<void>;
@@ -18,13 +18,13 @@ interface ProjectRepository {
 export const projectRepository: ProjectRepository = {
     createProject: async (request: ProjectCreateRequest): Promise<void> => {
         const { error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(PROJECT_TABLE_NAME)
             .insert(request);
         if (error) throw error;
     },
     getProjects: async (): Promise<Project[]> => {
         const { data, error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(PROJECT_TABLE_NAME)
             .select('*')
             .order('start_date', { ascending: false });
         if (error) throw error;
@@ -32,7 +32,7 @@ export const projectRepository: ProjectRepository = {
     },
     getProject: async (id: number): Promise<Project> => {
         const { data, error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(PROJECT_TABLE_NAME)
             .select('*')
             .eq('id', id)
             .single();
@@ -41,14 +41,14 @@ export const projectRepository: ProjectRepository = {
     },
     updateProject: async (id: number, request: ProjectCreateRequest): Promise<void> => {
         const { error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(PROJECT_TABLE_NAME)
             .update(request)
             .eq('id', id);
         if (error) throw error;
     },
     deleteProject: async (id: number): Promise<void> => {
         const { error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(PROJECT_TABLE_NAME)
             .delete()
             .eq('id', id);
         if (error) throw error;
