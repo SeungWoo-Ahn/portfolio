@@ -44,7 +44,7 @@ const LoginFormDialog = ({ open, dismiss }: LoginFormDialogProps) => {
                         required: true
                     })}
                 />
-                <SubmitButton />
+                <SubmitButton text='로그인' isLoading={mututation.isPending}/>
             </form>
         </dialog>
     );
