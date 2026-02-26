@@ -1,16 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, type ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
 import SubmitButton from "../../components/Button/SubmitButton";
 import Input from "../../components/Input/Input";
-import { projectRepository } from "../../data/projectRepository";
-import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
-import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { QUERY_KEYS } from "../../consts/QueryKeys";
-import { PATHS } from "../../consts/Paths";
 import MarkdownPreview from "../../components/MarkdownPreview/Markdown";
 import TextArea from "../../components/TextArea/TextArea";
+import { PATHS } from "../../consts/Paths";
+import { QUERY_KEYS } from "../../consts/QueryKeys";
+import { projectRepository } from "../../data/projectRepository";
+import { useImageUpload } from "../../hooks/useImageUpload";
+import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
+import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -18,7 +19,8 @@ const ProjectPost = () => {
     const editMode = Boolean(id);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset, watch } = useForm<ProjectCreatePayload>();
+    const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<ProjectCreatePayload>();
+    const { mutate: imageUploadMutate, isPending: imageUploadPending } = useImageUpload();
     const markdown = watch('content');
 
     const { data, isError } = useQuery({
@@ -63,7 +65,26 @@ const ProjectPost = () => {
         onError: (error) => { alert(error.message) }
     });
 
-    const isLoading = editMode ? updateMutation.isPending : createMutation.isPending;
+    const isLoading = imageUploadPending &&
+        editMode ? updateMutation.isPending : createMutation.isPending;
+
+    const handleSelectImage = (event: ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files?.[0];
+        if (!selectedFile) {
+            return;
+        } 
+        imageUploadMutate(
+            { bucket: 'projects', file: selectedFile },
+            {
+                onSuccess: (url) => {
+                    const originContent = getValues('content');
+                    const imageMarkdown = `![](${url})`;
+                    setValue('content', `${originContent}\n${imageMarkdown}`);
+                 },
+            }
+        )
+        event.target.value = '';
+    }
 
     const onSubmit = (payload: ProjectCreatePayload) => {
         if (editMode) {
@@ -78,6 +99,7 @@ const ProjectPost = () => {
 
     return (
         <>
+            <input type='file' accept='image/*' onChange={handleSelectImage} />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Input
                     type='text'
@@ -111,8 +133,9 @@ const ProjectPost = () => {
                         }
                     })}
                 />
-                <TextArea 
+                <TextArea
                     placeholder='내용...'
+                    disabled={imageUploadPending}
                     registration={register('content', {
                         required: true
                     })}

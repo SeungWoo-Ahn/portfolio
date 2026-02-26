@@ -6,7 +6,19 @@ interface MarkdownPreviewProps {
 
 const MarkdownPreview = ({ markdown }: MarkdownPreviewProps) => {
     return (
-        <Markdown>{markdown}</Markdown>
+        <Markdown
+            components={{
+                img: ({ node, ...props }) => (
+                    <img 
+                        {...props}
+                        width={1024}
+                        loading='lazy'
+                    />
+                )
+            }}
+        >
+            {markdown}
+        </Markdown>
     );
 };
 
