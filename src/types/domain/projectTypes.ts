@@ -10,7 +10,6 @@ export type Project = {
     category: ProjectCategory;
     start_date: string;
     end_date: string | null;
-    cover_image_url: string | null;
     project_url: string | null;
     additional_url: string | null;
     created_at: string;

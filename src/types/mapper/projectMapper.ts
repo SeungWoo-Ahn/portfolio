@@ -1,5 +1,5 @@
-import type { ProjectCategory, ProjectStatus } from "../domain/projectTypes";
-import type { ProjectCategoryUiModel, ProjectStatusUiModel } from "../uiModel/projectUiModel";
+import type { ProjectCategory, ProjectCreateRequest, ProjectStatus } from "../domain/projectTypes";
+import type { ProjectCategoryUiModel, ProjectCreatePayload, ProjectStatusUiModel } from "../uiModel/projectUiModel";
 
 export const ProjectStatusRecord: Record<ProjectStatus, ProjectStatusUiModel> = {
     NOT_DEPLOYED: {
@@ -32,4 +32,16 @@ export const projectCategoryEntries = Object.entries(ProjectCategoryRecord).map(
     id: key as ProjectCategory,
     ...value,
 }));
+
+export const projectMapper = {
+    toRequest: (payload: ProjectCreatePayload): ProjectCreateRequest => {
+        return {
+            ...payload,
+            start_date: payload.startDate,
+            end_date: payload.endDate,
+            project_url: payload.projectUrl,
+            additional_url: payload.additionalUr,
+        }
+    }
+}
 
