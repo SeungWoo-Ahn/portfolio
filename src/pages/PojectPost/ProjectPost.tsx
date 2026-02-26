@@ -1,31 +1,76 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import SubmitButton from "../../components/Button/SubmitButton";
 import Input from "../../components/Input/Input";
 import { projectRepository } from "../../data/projectRepository";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { QUERY_KEYS } from "../../consts/QueryKeys";
+import { PATHS } from "../../consts/Paths";
 
 const ProjectPost = () => {
-    const { register, handleSubmit } = useForm<ProjectCreatePayload>();
+    const { id } = useParams<{ id: string }>();
+    const projectId = id ? Number(id) : null;
+    const editMode = Boolean(id);
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const { register, handleSubmit, reset } = useForm<ProjectCreatePayload>();
+
+    const { data, isError } = useQuery({
+        queryKey: QUERY_KEYS.projects.detail(projectId!),
+        queryFn: () => projectRepository.getProject(projectId!),
+        enabled: editMode,
+    });
+
+    useEffect(() => {
+        if (isError) {
+            alert('데이터 로드에 실패했어요');
+            navigate(-1);
+        }
+    }, [isError, navigate])
+
+
+    useEffect(() => {
+        if (editMode && data) {
+            const payload = projectMapper.toPayload(data);
+            reset(payload);
+        }
+    }, [data, editMode]);
+
+    const handleSuccess = async () => {
+        await queryClient.invalidateQueries({
+            queryKey: QUERY_KEYS.projects.all,
+        });
+        navigate(PATHS.HOME);
+    }
 
     const createMutation = useMutation({
-        mutationFn: (payload: ProjectCreatePayload) => {
-            const request = projectMapper.toRequest(payload);
-            console.log(request);
-            return projectRepository.createProject(request);
-        },
+        mutationFn: (payload: ProjectCreatePayload) =>
+            projectRepository.createProject(projectMapper.toRequest(payload)),
+        onSuccess: handleSuccess,
         onError: (error) => { alert(error.message) }
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, payload }: { id: number, payload: ProjectCreatePayload }) => 
+        mutationFn: ({ id, payload }: { id: number, payload: ProjectCreatePayload }) =>
             projectRepository.updateProject(id, projectMapper.toRequest(payload)),
+        onSuccess: handleSuccess,
         onError: (error) => { alert(error.message) }
     });
-    
+
+    const isLoading = editMode ? updateMutation.isPending : createMutation.isPending;
+
     const onSubmit = (payload: ProjectCreatePayload) => {
-        createMutation.mutate(payload);
+        if (editMode) {
+            updateMutation.mutate({
+                id: projectId!,
+                payload: payload,
+            });
+        } else {
+            createMutation.mutate(payload);
+        }
     }
 
     return (
@@ -79,7 +124,7 @@ const ProjectPost = () => {
                 placheholder='https://... (추가 링크)'
                 registration={register('additionalUrl')}
             />
-            <SubmitButton isLoading={createMutation.isPending}/>
+            <SubmitButton isLoading={isLoading} />
         </form>
     );
 };

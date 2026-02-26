@@ -1,4 +1,4 @@
-import type { ProjectCategory, ProjectCreateRequest, ProjectStatus } from "../domain/projectTypes";
+import type { Project, ProjectCategory, ProjectCreateRequest, ProjectStatus } from "../domain/projectTypes";
 import type { ProjectCategoryUiModel, ProjectCreatePayload, ProjectStatusUiModel } from "../uiModel/projectUiModel";
 
 export const ProjectStatusRecord: Record<ProjectStatus, ProjectStatusUiModel> = {
@@ -44,6 +44,18 @@ export const projectMapper = {
             end_date: payload.endDate || null,
             project_url: payload.projectUrl || null,
             additional_url: payload.additionalUrl || null,
+        }
+    },
+    toPayload: (project: Project): ProjectCreatePayload => {
+        return {
+            title: project.title,
+            content: project.content,
+            status: project.status,
+            category: project.category,
+            startDate: project.start_date,
+            endDate: project.end_date || '',
+            projectUrl: project.project_url || '',
+            additionalUrl: project.additional_url || '',
         }
     }
 }
