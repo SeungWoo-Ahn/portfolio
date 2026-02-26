@@ -20,3 +20,15 @@ export type ProjectCreatePayload = {
     projectUrl: string;
     additionalUrl: string;
 }
+
+export type ProjectUiModel = {
+    id: number;
+    title: string;
+    content: string;
+    status: ProjectStatusUiModel;
+    category: ProjectCategoryUiModel;
+    projectPeriod: string;
+    projectUrl: string | null;
+    additionalUrl: string | null;
+    createdAt: string;
+}
