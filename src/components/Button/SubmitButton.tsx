@@ -1,6 +1,6 @@
 const SubmitButton = () => {
     return (
-        <input type='submit' />
+        <button type='submit'>제출</button>
     );
 }
 
