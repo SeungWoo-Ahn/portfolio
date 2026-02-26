@@ -9,6 +9,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { QUERY_KEYS } from "../../consts/QueryKeys";
 import { PATHS } from "../../consts/Paths";
+import MarkdownPreview from "../../components/MarkdownPreview/Markdown";
+import TextArea from "../../components/TextArea/TextArea";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -16,7 +18,8 @@ const ProjectPost = () => {
     const editMode = Boolean(id);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset } = useForm<ProjectCreatePayload>();
+    const { register, handleSubmit, reset, watch } = useForm<ProjectCreatePayload>();
+    const markdown = watch('content');
 
     const { data, isError } = useQuery({
         queryKey: QUERY_KEYS.projects.detail(projectId!),
@@ -74,58 +77,60 @@ const ProjectPost = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <Input
-                type='text'
-                placheholder='제목을 입력하세요'
-                registration={register('title', {
-                    required: true
-                })}
-            />
-            <select {...register('status', { required: true })}>
-                {projectStatusEntries.map(it => {
-                    return <option key={it.id} value={it.id}>{it.label}</option>
-                })}
-            </select>
-            <select {...register('category', { required: true })}>
-                {projectCategoryEntries.map(it => {
-                    return <option key={it.id} value={it.id}>{it.label}</option>
-                })}
-            </select>
-            <Input
-                type='date'
-                registration={register('startDate', {
-                    required: true
-                })}
-            />
-            <Input
-                type='date'
-                registration={register('endDate', {
-                    validate: (value, formValues) => {
-                        if (!value) return true;
-                        return value >= formValues.startDate || '종료일은 시작일보다 빠를 수 없습니다.'
-                    }
-                })}
-            />
-            <Input
-                type='text'
-                placheholder='내용...'
-                registration={register('content', {
-                    required: true
-                })}
-            />
-            <Input
-                type='text'
-                placheholder='https://... (github)'
-                registration={register('projectUrl')}
-            />
-            <Input
-                type='text'
-                placheholder='https://... (추가 링크)'
-                registration={register('additionalUrl')}
-            />
-            <SubmitButton isLoading={isLoading} />
-        </form>
+        <>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Input
+                    type='text'
+                    placheholder='제목을 입력하세요'
+                    registration={register('title', {
+                        required: true
+                    })}
+                />
+                <select {...register('status', { required: true })}>
+                    {projectStatusEntries.map(it => {
+                        return <option key={it.id} value={it.id}>{it.label}</option>
+                    })}
+                </select>
+                <select {...register('category', { required: true })}>
+                    {projectCategoryEntries.map(it => {
+                        return <option key={it.id} value={it.id}>{it.label}</option>
+                    })}
+                </select>
+                <Input
+                    type='date'
+                    registration={register('startDate', {
+                        required: true
+                    })}
+                />
+                <Input
+                    type='date'
+                    registration={register('endDate', {
+                        validate: (value, formValues) => {
+                            if (!value) return true;
+                            return value >= formValues.startDate || '종료일은 시작일보다 빠를 수 없습니다.'
+                        }
+                    })}
+                />
+                <TextArea 
+                    placeholder='내용...'
+                    registration={register('content', {
+                        required: true
+                    })}
+                />
+                <Input
+                    type='text'
+                    placheholder='https://... (github)'
+                    registration={register('projectUrl')}
+                />
+                <Input
+                    type='text'
+                    placheholder='https://... (추가 링크)'
+                    registration={register('additionalUrl')}
+                />
+                <SubmitButton isLoading={isLoading} />
+            </form>
+            <MarkdownPreview markdown={markdown} />
+        </>
     );
 };
 
