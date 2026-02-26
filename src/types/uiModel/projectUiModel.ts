@@ -18,5 +18,5 @@ export type ProjectCreatePayload = {
     startDate: string;
     endDate: string;
     projectUrl: string;
-    additionalUr: string;
+    additionalUrl: string;
 }

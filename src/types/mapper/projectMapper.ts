@@ -36,11 +36,14 @@ export const projectCategoryEntries = Object.entries(ProjectCategoryRecord).map(
 export const projectMapper = {
     toRequest: (payload: ProjectCreatePayload): ProjectCreateRequest => {
         return {
-            ...payload,
+            title: payload.title.trim(),
+            content: payload.content.trim(),
+            status: payload.status,
+            category: payload.category,
             start_date: payload.startDate,
-            end_date: payload.endDate,
-            project_url: payload.projectUrl,
-            additional_url: payload.additionalUr,
+            end_date: payload.endDate || null,
+            project_url: payload.projectUrl || null,
+            additional_url: payload.additionalUrl || null,
         }
     }
 }

@@ -1,6 +1,10 @@
-const SubmitButton = () => {
+interface SubmitButtonProps {
+    isLoading: boolean;
+}
+
+const SubmitButton = ({ isLoading }: SubmitButtonProps) => {
     return (
-        <button type='submit'>제출</button>
+        <button type='submit'>{isLoading ? '로딩 중...' : '출간하기'}</button>
     );
 }
 

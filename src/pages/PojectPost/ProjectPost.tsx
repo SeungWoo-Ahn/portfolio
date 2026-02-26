@@ -3,37 +3,36 @@ import { useForm } from "react-hook-form";
 import SubmitButton from "../../components/Button/SubmitButton";
 import Input from "../../components/Input/Input";
 import { projectRepository } from "../../data/projectRepository";
-import type { ProjectCreateRequest } from "../../types/domain/projectTypes";
-import { projectCategoryEntries, projectStatusEntries } from "../../types/mapper/projectMapper";
+import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
+import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
 
 const ProjectPost = () => {
-    const { register, handleSubmit } = useForm<ProjectCreateRequest>();
+    const { register, handleSubmit } = useForm<ProjectCreatePayload>();
 
     const createMutation = useMutation({
-        mutationFn: (request: ProjectCreateRequest) => projectRepository.createProject(request),
+        mutationFn: (payload: ProjectCreatePayload) => {
+            const request = projectMapper.toRequest(payload);
+            console.log(request);
+            return projectRepository.createProject(request);
+        },
         onError: (error) => { alert(error.message) }
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, request }: { id: number, request: ProjectCreateRequest }) => projectRepository.updateProject(id, request),
+        mutationFn: ({ id, payload }: { id: number, payload: ProjectCreatePayload }) => 
+            projectRepository.updateProject(id, projectMapper.toRequest(payload)),
         onError: (error) => { alert(error.message) }
     });
     
-    const onSubmit = (request: ProjectCreateRequest) => {
-        const payload: ProjectCreateRequest = {
-            ...request,
-            end_date: request.end_date || null,
-            cover_image_url: request.cover_image_url || null,
-            project_url: request.project_url || null,
-            additional_url: request.additional_url || null,
-        }
-        createMutation.mutate(payload);  
+    const onSubmit = (payload: ProjectCreatePayload) => {
+        createMutation.mutate(payload);
     }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Input
                 type='text'
+                placheholder='제목을 입력하세요'
                 registration={register('title', {
                     required: true
                 })}
@@ -50,38 +49,37 @@ const ProjectPost = () => {
             </select>
             <Input
                 type='date'
-                registration={register('start_date', {
+                registration={register('startDate', {
                     required: true
                 })}
             />
             <Input
                 type='date'
-                registration={register('end_date', {
+                registration={register('endDate', {
                     validate: (value, formValues) => {
                         if (!value) return true;
-                        return value >= formValues.start_date || '종료일은 시작일보다 빠를 수 없습니다.'
+                        return value >= formValues.startDate || '종료일은 시작일보다 빠를 수 없습니다.'
                     }
                 })}
             />
             <Input
                 type='text'
+                placheholder='내용...'
                 registration={register('content', {
                     required: true
                 })}
             />
             <Input
                 type='text'
-                registration={register('project_url')}
+                placheholder='https://... (github)'
+                registration={register('projectUrl')}
             />
             <Input
                 type='text'
-                registration={register('additional_url')}
+                placheholder='https://... (추가 링크)'
+                registration={register('additionalUrl')}
             />
-            <Input
-                type='text'
-                registration={register('cover_image_url')}
-            />
-            <SubmitButton />
+            <SubmitButton isLoading={createMutation.isPending}/>
         </form>
     );
 };
