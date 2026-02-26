@@ -1,7 +1,7 @@
 import type { BlogPost, BlogPostCreateRequest } from "../types/domain/blogTypes";
 import { supabaseClient } from "./supabase";
 
-const TABLE_NAME = 'posts';
+export const BLOG_TABLE_NAME = 'posts';
 
 interface BlogRepository {
     createBlogPost(request: BlogPostCreateRequest): Promise<void>;
@@ -18,13 +18,13 @@ interface BlogRepository {
 export const blogRepository: BlogRepository = {
     createBlogPost: async (request: BlogPostCreateRequest): Promise<void> => {
         const { error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(BLOG_TABLE_NAME)
             .insert(request);
         if (error) throw error;
     },
     getBlogPosts: async (): Promise<BlogPost[]> => {
         const { data, error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(BLOG_TABLE_NAME)
             .select('*')
             .order('created_at', { ascending: false });
         if (error) throw error;
@@ -32,7 +32,7 @@ export const blogRepository: BlogRepository = {
     },
     getBlogPost: async (id: number): Promise<BlogPost> => {
         const { data, error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(BLOG_TABLE_NAME)
             .select('*')
             .eq('id', id)
             .single();
@@ -41,14 +41,14 @@ export const blogRepository: BlogRepository = {
     },
     updateBlogPost: async (id: number, request: BlogPostCreateRequest): Promise<void> => {
         const { error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(BLOG_TABLE_NAME)
             .update(request)
             .eq('id', id);
         if (error) throw error;
     },
     deleteBlogPost: async (id: number): Promise<void> => {
         const { error } = await supabaseClient
-            .from(TABLE_NAME)
+            .from(BLOG_TABLE_NAME)
             .delete()
             .eq('id', id);
         if (error) throw error;
