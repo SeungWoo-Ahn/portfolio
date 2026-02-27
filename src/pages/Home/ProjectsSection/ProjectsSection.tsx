@@ -4,7 +4,7 @@ import { projectRepository } from "../../../data/projectRepository";
 import { useAuth } from "../../../hooks/useAuth";
 import { projectMapper } from "../../../types/mapper/projectMapper";
 import ProjectItem from "./ProjectItem/ProjectItem";
-import styled from './ProjectsSection.module.css'
+import styled from '../Home.module.css'
 
 const ProjectsSection = () => {
     const { isLoggedIn } = useAuth();

@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../../../hooks/useAuth";
 import { QUERY_KEYS } from "../../../consts/QueryKeys";
-import { blogMapper } from "../../../types/mapper/blogMapper";
 import { blogRepository } from "../../../data/blogRepository";
-import { Link } from "react-router-dom";
-import { PATHS } from "../../../consts/Paths";
+import { useAuth } from "../../../hooks/useAuth";
+import { blogMapper } from "../../../types/mapper/blogMapper";
+import styled from '../Home.module.css';
+import BlogPostItem from "./BlogPostItem/BlogPostItem";
 
 const BlogPostsSection = () => {
     const { isLoggedIn } = useAuth();
@@ -31,19 +31,14 @@ const BlogPostsSection = () => {
     }
     
     return (
-        <section>
-            {data?.map(it => (
-                <article key={it.id}>
-                    <p>{it.title}</p>
-                    <p>{it.content}</p>
-                    <p>{it.createdAt}</p>
-                    {isLoggedIn && (
-                        <>
-                            <Link to={PATHS.BLOG_EDIT(it.id)}>수정</Link>
-                            <button onClick={() => onDelete(it.id)}>삭제</button>
-                        </>
-                    )}
-                </article>
+        <section className={styled.section}>
+            <h2 className={styled.title}>BLOG</h2>
+            {data && data.map(it => (
+                <BlogPostItem 
+                    key={it.id} 
+                    blogPost={it}
+                    showManageButton={isLoggedIn}
+                    onDelete={() => onDelete(it.id)}/>
             ))}
         </section>
     );
