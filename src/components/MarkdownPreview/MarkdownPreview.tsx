@@ -1,4 +1,4 @@
-import Markdown from "react-markdown";
+import ReactMarkdown from "react-markdown";
 
 interface MarkdownPreviewProps {
     markdown: string;
@@ -6,19 +6,23 @@ interface MarkdownPreviewProps {
 
 const MarkdownPreview = ({ markdown }: MarkdownPreviewProps) => {
     return (
-        <Markdown
+        <ReactMarkdown
             components={{
                 img: ({ node, ...props }) => (
-                    <img 
-                        {...props}
-                        width={1024}
+                    <img
+                        width={768}
                         loading='lazy'
+                        style={{ 
+                            display: 'block',
+                            margin: '0 auto',
+                         }}
+                        {...props}
                     />
                 )
             }}
         >
             {markdown}
-        </Markdown>
+        </ReactMarkdown>
     );
 };
 
