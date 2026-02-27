@@ -4,6 +4,7 @@ import { projectRepository } from "../../../data/projectRepository";
 import { useAuth } from "../../../hooks/useAuth";
 import { projectMapper } from "../../../types/mapper/projectMapper";
 import ProjectItem from "./ProjectItem/ProjectItem";
+import styled from './ProjectsSection.module.css'
 
 const ProjectsSection = () => {
     const { isLoggedIn } = useAuth();
@@ -30,7 +31,8 @@ const ProjectsSection = () => {
     }
 
     return (
-        <section>
+        <section className={styled.section}>
+            <h2 className={styled.title}>PROJECTS</h2>
             {data && data.map((it, index) => (
                 <ProjectItem 
                     key={it.id} 
