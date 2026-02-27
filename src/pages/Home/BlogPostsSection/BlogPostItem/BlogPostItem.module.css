@@ -2,12 +2,15 @@
     padding: 16px;
     background-color: var(--color-white);
     color: var(--color-font);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease-out;
     cursor: pointer;
 
     &:hover {
         background-color: var(--color-font);
         color: var(--color-white);
+        transform: translateY(-10px);
     }
 }
 
@@ -15,6 +18,10 @@
     display: flex;
     gap: 40%;
     height: 360px;
+
+    &.expanded {
+        height: 100%;
+    }
 }
 
 .headerContent {
@@ -40,6 +47,11 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        &.expanded {
+            white-space: normal;
+            overflow: visible;
+        }
     }
 
     .summary {
@@ -68,7 +80,35 @@
     height: 360px;
 }
 
+/* 바디 */
+.body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    width: 100%;
+    background-color: inherit;
+
+    &.expanded {
+        grid-template-rows: 1fr;
+    }
+}
+
+.bodyContent {
+    width: 768px;
+    min-height: 0;
+    margin: 0 auto;
+}
+
+.bodyMarkdownWrapper {
+    padding: 16px 0;
+}
+
 @media (max-width: 1024px) {
+    .article {
+        padding: 14px;
+    }
+
     .header {
         height: 240px;
         gap: 36px;
@@ -79,7 +119,7 @@
 
         .title {
             font-size: 20px;
-            
+
 
         }
 
@@ -98,9 +138,17 @@
         width: 360px;
         height: 240px;
     }
+
+    .bodyContent {
+        width: 100%;
+    }
 }
 
 @media (max-width: 767px) {
+    .article {
+        padding: 10px;
+    }
+
     .header {
         height: 100px;
         gap: 24px;
