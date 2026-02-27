@@ -1,3 +1,44 @@
+@font-face {
+  font-family: 'PPNeuel';
+  src: url('./assets/fonts/PPNeueMontreal-Bold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+
+}
+
+@font-face {
+  font-family: 'PPNeuel';
+  src: url('./assets/fonts/PPNeueMontreal-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPNeuel';
+  src: url('./assets/fonts/PPNeueMontreal-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPNeuel';
+  src: url('./assets/fonts/PPNeueMontreal-Book.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPNeuel';
+  src: url('./assets/fonts/PPNeueMontreal-Thin.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +46,11 @@
 }
 
 :root {
-  --primary-color: #0064FF;
+  font-family: 'PPNeuel', system-ui, sans-serif;
+
+  --color-primary: #0064FF;
+  --color-font: #202632;
+  --color-white: #ffffff;
 }
 
 html, body {
@@ -16,8 +61,8 @@ html, body {
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #ffffff;
-  color: #202632;
+  background-color: var(--color-white);
+  color: var(--color-font);
 }
 
 a {
