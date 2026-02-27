@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import SubmitButton from "../../components/Button/SubmitButton";
 import Input from "../../components/Input/Input";
-import MarkdownPreview from "../../components/MarkdownPreview/Markdown";
+import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
 import TextArea from "../../components/TextArea/TextArea";
 import { PATHS } from "../../consts/Paths";
 import { QUERY_KEYS } from "../../consts/QueryKeys";

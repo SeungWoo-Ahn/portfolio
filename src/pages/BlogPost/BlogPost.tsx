@@ -11,7 +11,7 @@ import { blogMapper } from "../../types/mapper/blogMapper";
 import Input from "../../components/Input/Input";
 import TextArea from "../../components/TextArea/TextArea";
 import SubmitButton from "../../components/Button/SubmitButton";
-import MarkdownPreview from "../../components/MarkdownPreview/Markdown";
+import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
 
 const BlogPost = () => {
     const { id } = useParams<{ id: string }>();

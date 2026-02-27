@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../../../consts/QueryKeys";
 import { projectRepository } from "../../../data/projectRepository";
-import { projectMapper } from "../../../types/mapper/projectMapper";
-import { Link } from "react-router-dom";
-import { PATHS } from "../../../consts/Paths";
 import { useAuth } from "../../../hooks/useAuth";
+import { projectMapper } from "../../../types/mapper/projectMapper";
+import ProjectItem from "./ProjectItem/ProjectItem";
+import styled from '../Home.module.css'
 
 const ProjectsSection = () => {
     const { isLoggedIn } = useAuth();
@@ -31,25 +31,15 @@ const ProjectsSection = () => {
     }
 
     return (
-        <section>
-            {data?.map(it => (
-                <article key={it.id}>
-                    <p>{it.title}</p>
-                    <p>{it.content}</p>
-                    <p>{it.status.label}</p>
-                    <p>{it.category.label}</p>
-                    <p>{it.projectPeriod}</p>
-                    <p>{it.createdAt}</p>
-                    {it.projectUrl && <a href={it.projectUrl} target='_blank'>Github</a>}
-                    {it.additionalUrl && <a href={it.additionalUrl} target='_blank'>Github</a>}
-                    {isLoggedIn && (
-                        <>
-                            <Link to={PATHS.PROJECT_EDIT(it.id)}>수정</Link>
-                            <button onClick={() => onDelete(it.id)}>삭제</button>
-                        </>
-                    )}
-
-                </article>
+        <section className={styled.section}>
+            <h2 className={styled.title}>PROJECTS</h2>
+            {data && data.map((it, index) => (
+                <ProjectItem 
+                    key={it.id} 
+                    project={it}
+                    showManageButton={isLoggedIn}
+                    zIndex={index + 1}
+                    onDelete={() => onDelete(it.id)} />
             ))}
         </section>
     );

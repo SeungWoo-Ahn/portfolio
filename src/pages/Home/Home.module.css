@@ -1,0 +1,16 @@
+.section {
+    padding: 160px 0;
+}
+
+.title {
+    font-size: 80px;
+    font-weight: 300;
+    margin-bottom: 108px;
+}
+
+@media (max-width: 767px) {
+    .title {
+        font-size: 48px;
+        margin-bottom: 64px;
+    }
+}

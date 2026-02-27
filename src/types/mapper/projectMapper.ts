@@ -15,7 +15,7 @@ const ProjectStatusRecord: Record<ProjectStatus, ProjectStatusUiModel> = {
 
 export const projectStatusEntries = Object.entries(ProjectStatusRecord).map(([key, value]) => ({
     id: key as ProjectStatus,
-    ...value, 
+    ...value,
 }));
 
 const ProjectCategoryRecord: Record<ProjectCategory, ProjectCategoryUiModel> = {
@@ -66,9 +66,9 @@ export const projectMapper = {
             content: project.content,
             status: ProjectStatusRecord[project.status],
             category: ProjectCategoryRecord[project.category],
-            projectPeriod: project.end_date 
-            ? `${dateMapper.toFullDate(project.start_date)}-${dateMapper.toFullDate(project.end_date)}` 
-            : `${dateMapper.toFullDate(project.start_date)}-(진행 중)`,
+            projectPeriod: project.end_date
+                ? `${dateMapper.toFullDate(project.start_date)} - ${dateMapper.toFullDate(project.end_date)}`
+                : `${dateMapper.toFullDate(project.start_date)} - 진행 중`,
             projectUrl: project.project_url,
             additionalUrl: project.additional_url,
             createdAt: dateMapper.toFullDate(project.created_at),
