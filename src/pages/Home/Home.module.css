@@ -2,15 +2,35 @@
     padding: 160px 0;
 }
 
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 240px;
+    padding-right: 24px;
+
+    a {
+        font-size: 36px;
+        font-weight: 300;
+    }
+}
+
 .title {
-    font-size: 80px;
+    font-size: 96px;
     font-weight: 300;
-    margin-bottom: 108px;
 }
 
 @media (max-width: 767px) {
+    .sectionHeader {
+        margin-bottom: 96px;
+        padding-right: 0;
+
+        a {
+            font-size: 24px;
+        }
+    }
+
     .title {
-        font-size: 48px;
-        margin-bottom: 64px;
+        font-size: 56px;
     }
 }

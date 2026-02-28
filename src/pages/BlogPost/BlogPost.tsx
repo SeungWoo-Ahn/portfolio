@@ -1,17 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import type { BlogPostCreatePayload } from "../../types/uiModel/blogUiModel";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useImageUpload } from "../../hooks/useImageUpload";
+import { useNavigate, useParams } from "react-router-dom";
+import FileInput from "../../components/Form/Input/FileInput";
+import TextInput from "../../components/Form/Input/TextInput";
+import FormManager from "../../components/Form/Manager/FormManager";
+import TextArea from "../../components/Form/TextArea/TextArea";
+import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
+import { PATHS } from "../../consts/Paths";
 import { QUERY_KEYS } from "../../consts/QueryKeys";
 import { blogRepository } from "../../data/blogRepository";
-import { useEffect, type ChangeEvent } from "react";
-import { PATHS } from "../../consts/Paths";
+import { useImageUpload } from "../../hooks/useImageUpload";
 import { blogMapper } from "../../types/mapper/blogMapper";
-import Input from "../../components/Input/Input";
-import TextArea from "../../components/TextArea/TextArea";
-import SubmitButton from "../../components/Button/SubmitButton";
-import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
+import type { BlogPostCreatePayload } from "../../types/uiModel/blogUiModel";
+import styled from './BlogPost.module.css';
 
 const BlogPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -37,11 +39,11 @@ const BlogPost = () => {
     }, [isError, navigate]);
 
     useEffect(() => {
-            if (editMode && data) {
-                const payload = blogMapper.toPayload(data);
-                reset(payload);
-            }
-        }, [data, editMode]);
+        if (editMode && data) {
+            const payload = blogMapper.toPayload(data);
+            reset(payload);
+        }
+    }, [data, editMode]);
 
     const handleSuccess = async () => {
         await queryClient.invalidateQueries({
@@ -67,13 +69,9 @@ const BlogPost = () => {
     const isLoading = imageUploadPending &&
         editMode ? updateMutation.isPending : createMutation.isPending;
 
-    const handleSelectImage = (event: ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        if (!selectedFile) {
-            return;
-        }
+    const uploadImage = (file: File) => {
         imageUploadMutate(
-            { bucket: 'blogs', file: selectedFile },
+            { bucket: 'blogs', file: file },
             {
                 onSuccess: (url) => {
                     const originContent = getValues('content');
@@ -82,7 +80,6 @@ const BlogPost = () => {
                 },
             }
         )
-        event.target.value = '';
     }
 
     const onSubmit = (payload: BlogPostCreatePayload) => {
@@ -97,27 +94,37 @@ const BlogPost = () => {
     }
 
     return (
-        <>
-            <input type='file' accept='image/*' onChange={handleSelectImage} />
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
-                    type='text'
-                    placheholder='제목을 입력하세요'
-                    registration={register('title', {
-                        required: true
-                    })}
-                />
-                <TextArea
-                    placeholder='내용...'
-                    disabled={imageUploadPending}
-                    registration={register('content', {
-                        required: true
-                    })}
-                />
-                <SubmitButton isLoading={isLoading} />
+        <div className={styled.container}>
+            <form
+                className={styled.form}
+                onSubmit={handleSubmit(onSubmit)}>
+                <div className={styled.inputWrapper}>
+                    <TextInput
+                        type='text'
+                        placheholder='제목을 입력하세요'
+                        registration={register('title', {
+                            required: '제목을 입력해주세요'
+                        })}
+                    />
+                    <div className={styled.rowWrapper}>
+                        <FileInput onSelectedFile={uploadImage} />
+                    </div>
+                    <div className={styled.textareaWrapper}>
+                        <TextArea
+                            placeholder='내용...'
+                            disabled={imageUploadPending}
+                            registration={register('content', {
+                                required: '내용을 입력해주세요'
+                            })}
+                        />
+                    </div>
+                </div>
+                <FormManager isLoading={isLoading} />
             </form>
-            <MarkdownPreview markdown={markdown} />
-        </>
+            <div className={styled.markdownContainer}>
+                <MarkdownPreview markdown={markdown} />
+            </div>
+        </div>
     );
 };
 

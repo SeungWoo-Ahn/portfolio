@@ -42,7 +42,7 @@ const ProjectItem = ({ project, showManageButton, zIndex, onDelete }: ProjectIte
                 <div className={styled.bodyContent}>
                     {showManageButton && (
                         <div className={styled.bodyManageWrapper}>
-                            <Link to={PATHS.BLOG_EDIT(project.id)}>EDIT</Link>
+                            <Link to={PATHS.PROJECT_EDIT(project.id)}>EDIT</Link>
                             <a onClick={onDelete}>DELETE</a>
                         </div>
                     )}

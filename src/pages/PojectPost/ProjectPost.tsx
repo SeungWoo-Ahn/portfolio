@@ -1,17 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, type ChangeEvent } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import SubmitButton from "../../components/Button/SubmitButton";
-import Input from "../../components/Input/Input";
+import DateInput from "../../components/Form/Input/DateInput";
+import FileInput from "../../components/Form/Input/FileInput";
+import Select from "../../components/Form/Input/Select";
+import TextInput from "../../components/Form/Input/TextInput";
+import FormManager from "../../components/Form/Manager/FormManager";
+import TextArea from "../../components/Form/TextArea/TextArea";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
-import TextArea from "../../components/TextArea/TextArea";
 import { PATHS } from "../../consts/Paths";
 import { QUERY_KEYS } from "../../consts/QueryKeys";
 import { projectRepository } from "../../data/projectRepository";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
+import styled from './ProjectPost.module.css';
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -19,7 +23,20 @@ const ProjectPost = () => {
     const editMode = Boolean(id);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<ProjectCreatePayload>();
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        watch,
+        getValues,
+        setValue,
+    } = useForm<ProjectCreatePayload>({
+        defaultValues: {
+            category: 'PERSONAL',
+            status: 'NOT_DEPLOYED'
+        }
+    });
     const { mutate: imageUploadMutate, isPending: imageUploadPending } = useImageUpload();
     const markdown = watch('content');
 
@@ -42,7 +59,7 @@ const ProjectPost = () => {
             const payload = projectMapper.toPayload(data);
             reset(payload);
         }
-    }, [data, editMode]);
+    }, [data, editMode, reset]);
 
     const handleSuccess = async () => {
         await queryClient.invalidateQueries({
@@ -68,22 +85,17 @@ const ProjectPost = () => {
     const isLoading = imageUploadPending &&
         editMode ? updateMutation.isPending : createMutation.isPending;
 
-    const handleSelectImage = (event: ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        if (!selectedFile) {
-            return;
-        } 
+    const uploadImage = (file: File) => {
         imageUploadMutate(
-            { bucket: 'projects', file: selectedFile },
+            { bucket: 'projects', file: file },
             {
                 onSuccess: (url) => {
                     const originContent = getValues('content');
                     const imageMarkdown = `![](${url})`;
                     setValue('content', `${originContent}\n${imageMarkdown}`);
-                 },
+                },
             }
         )
-        event.target.value = '';
     }
 
     const onSubmit = (payload: ProjectCreatePayload) => {
@@ -98,62 +110,90 @@ const ProjectPost = () => {
     }
 
     return (
-        <>
-            <input type='file' accept='image/*' onChange={handleSelectImage} />
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
-                    type='text'
-                    placheholder='제목을 입력하세요'
-                    registration={register('title', {
-                        required: true
-                    })}
-                />
-                <select {...register('status', { required: true })}>
-                    {projectStatusEntries.map(it => {
-                        return <option key={it.id} value={it.id}>{it.label}</option>
-                    })}
-                </select>
-                <select {...register('category', { required: true })}>
-                    {projectCategoryEntries.map(it => {
-                        return <option key={it.id} value={it.id}>{it.label}</option>
-                    })}
-                </select>
-                <Input
-                    type='date'
-                    registration={register('startDate', {
-                        required: true
-                    })}
-                />
-                <Input
-                    type='date'
-                    registration={register('endDate', {
-                        validate: (value, formValues) => {
-                            if (!value) return true;
-                            return value >= formValues.startDate || '종료일은 시작일보다 빠를 수 없습니다.'
-                        }
-                    })}
-                />
-                <TextArea
-                    placeholder='내용...'
-                    disabled={imageUploadPending}
-                    registration={register('content', {
-                        required: true
-                    })}
-                />
-                <Input
-                    type='text'
-                    placheholder='https://... (github)'
-                    registration={register('projectUrl')}
-                />
-                <Input
-                    type='text'
-                    placheholder='https://... (추가 링크)'
-                    registration={register('additionalUrl')}
-                />
-                <SubmitButton isLoading={isLoading} />
+        <div className={styled.container}>
+            <form className={styled.form} onSubmit={handleSubmit(onSubmit)}>
+                <div className={styled.inputWrapper}>
+                    <TextInput
+                        type='text'
+                        fontWeight='medieum'
+                        placheholder='제목을 입력하세요'
+                        registration={register('title', {
+                            required: '제목을 입력해주세요'
+                        })} />
+                    <div className={styled.rowWrapper}>
+                        <div className={styled.rowItem}>
+                            <DateInput
+                                label='시작 날짜'
+                                name='startDate'
+                                control={control}
+                                rules={{ required: '시작 날짜를 선택해주세요' }} />
+                        </div>
+                        <div className={styled.rowItem}>
+                            <DateInput
+                                label='종료 날짜'
+                                name='endDate'
+                                rules={{
+                                    validate: (value, formValues) => {
+                                        if (!value) return true;
+                                        return value >= formValues.startDate
+                                            || '종료 날짜는 시작 날짜보다 빠를 수 없습니다';
+                                    }
+                                }}
+                                control={control} />
+                        </div>
+                        <div className={styled.rowItem}>
+                            <Select
+                                options={projectCategoryEntries}
+                                valueKey='id'
+                                labelKey='label'
+                                registration={register('category', {
+                                    required: '프로젝트 유형을 선택해주세요'
+                                })} />
+                        </div>
+                        <div className={styled.rowItem}>
+                            <Select
+                                options={projectStatusEntries}
+                                valueKey='id'
+                                labelKey='label'
+                                registration={register('status', {
+                                    required: '프로젝트 상태를 선택해주세요'
+                                })} />
+                        </div>
+                    </div>
+                    <div className={styled.rowWrapper}>
+                        <div className={styled.rowItem}>
+                            <TextInput
+                                type='url'
+                                placheholder='https://... (github)'
+                                registration={register('projectUrl')}
+                            />
+                        </div>
+                        <div className={styled.rowItem}>
+                            <TextInput
+                                type='url'
+                                placheholder='https://... (추가 링크)'
+                                registration={register('additionalUrl')}
+                            />
+                        </div>
+                        <FileInput onSelectedFile={uploadImage} />
+
+                    </div>
+                    <div className={styled.textareaWrapper}>
+                        <TextArea
+                            placeholder='내용...'
+                            disabled={imageUploadPending}
+                            registration={register('content', {
+                                required: '내용을 입력해주세요'
+                            })}
+                        />
+                    </div>
+                </div>
+                <FormManager isLoading={isLoading} />
             </form>
-            <MarkdownPreview markdown={markdown} />
-        </>
+            <div className={styled.markdownContainer}>
+                <MarkdownPreview markdown={markdown} />
+            </div>
+        </div>
     );
 };
 

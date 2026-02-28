@@ -5,6 +5,8 @@ import { useAuth } from "../../../hooks/useAuth";
 import { blogMapper } from "../../../types/mapper/blogMapper";
 import styled from '../Home.module.css';
 import BlogPostItem from "./BlogPostItem/BlogPostItem";
+import { Link } from "react-router-dom";
+import { PATHS } from "../../../consts/Paths";
 
 const BlogPostsSection = () => {
     const { isLoggedIn } = useAuth();
@@ -29,16 +31,19 @@ const BlogPostsSection = () => {
     const onDelete = (id: number) => {
         deleteMutation.mutate(id);
     }
-    
+
     return (
         <section className={styled.section}>
-            <h2 className={styled.title}>BLOG</h2>
+            <div className={styled.sectionHeader}>
+                <h2 className={styled.title}>BLOG</h2>
+                {isLoggedIn && <Link to={PATHS.BLOG_POST}>NEW →</Link>}
+            </div>
             {data && data.map(it => (
-                <BlogPostItem 
-                    key={it.id} 
+                <BlogPostItem
+                    key={it.id}
                     blogPost={it}
                     showManageButton={isLoggedIn}
-                    onDelete={() => onDelete(it.id)}/>
+                    onDelete={() => onDelete(it.id)} />
             ))}
         </section>
     );
