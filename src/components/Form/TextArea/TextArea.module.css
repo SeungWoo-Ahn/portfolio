@@ -2,6 +2,7 @@
     width: 100%;
     padding: 8px;
     resize: none;
-    font-size: 20px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono';
+    font-size: 18px;
     font-weight: 400;
 }

@@ -2,11 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import SubmitButton from "../../components/Form/Button/SubmitButton";
 import DateInput from "../../components/Form/Input/DateInput";
 import FileInput from "../../components/Form/Input/FileInput";
 import Select from "../../components/Form/Input/Select";
 import TextInput from "../../components/Form/Input/TextInput";
+import FormManager from "../../components/Form/Manager/FormManager";
 import TextArea from "../../components/Form/TextArea/TextArea";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
 import { PATHS } from "../../consts/Paths";
@@ -158,7 +158,7 @@ const ProjectPost = () => {
                     placheholder='https://... (추가 링크)'
                     registration={register('additionalUrl')}
                 />
-                <SubmitButton isLoading={isLoading} />
+                <FormManager isLoading={isLoading}/>
             </form>
             <MarkdownPreview markdown={markdown} />
         </>

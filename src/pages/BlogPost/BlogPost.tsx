@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import SubmitButton from "../../components/Form/Button/SubmitButton";
 import FileInput from "../../components/Form/Input/FileInput";
 import TextInput from "../../components/Form/Input/TextInput";
+import FormManager from "../../components/Form/Manager/FormManager";
 import TextArea from "../../components/Form/TextArea/TextArea";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
 import { PATHS } from "../../consts/Paths";
@@ -110,7 +110,7 @@ const BlogPost = () => {
                         required: true
                     })}
                 />
-                <SubmitButton isLoading={isLoading} />
+                <FormManager isLoading={isLoading} />
             </form>
             <MarkdownPreview markdown={markdown} />
         </>

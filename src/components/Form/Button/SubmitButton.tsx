@@ -1,11 +1,11 @@
 import styled from './SubmitButton.module.css';
 
 interface SubmitButtonProps {
-    text?: string;
+    text: string;
     isLoading: boolean;
 }
 
-const SubmitButton = ({ text = '출간하기', isLoading }: SubmitButtonProps) => {
+const SubmitButton = ({ text, isLoading }: SubmitButtonProps) => {
     return (
         <button
             className={styled.button}
