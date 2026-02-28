@@ -1,3 +1,5 @@
+import styled from './SubmitButton.module.css';
+
 interface SubmitButtonProps {
     text?: string;
     isLoading: boolean;
@@ -5,7 +7,12 @@ interface SubmitButtonProps {
 
 const SubmitButton = ({ text = '출간하기', isLoading }: SubmitButtonProps) => {
     return (
-        <button type='submit'>{isLoading ? '로딩 중...' : text}</button>
+        <button
+            className={styled.button}
+            type='submit' 
+            disabled={isLoading}>
+            {isLoading ? '로딩 중...' : text}
+        </button>
     );
 }
 
