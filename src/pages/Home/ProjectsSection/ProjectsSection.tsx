@@ -5,6 +5,8 @@ import { useAuth } from "../../../hooks/useAuth";
 import { projectMapper } from "../../../types/mapper/projectMapper";
 import ProjectItem from "./ProjectItem/ProjectItem";
 import styled from '../Home.module.css'
+import { Link } from "react-router-dom";
+import { PATHS } from "../../../consts/Paths";
 
 const ProjectsSection = () => {
     const { isLoggedIn } = useAuth();
@@ -32,10 +34,13 @@ const ProjectsSection = () => {
 
     return (
         <section className={styled.section}>
-            <h2 className={styled.title}>PROJECTS</h2>
+            <div className={styled.sectionHeader}>
+                <h2 className={styled.title}>PROJECTS</h2>
+                {isLoggedIn && <Link to={PATHS.PROJECT_POST}>NEW →</Link>}
+            </div>
             {data && data.map((it, index) => (
-                <ProjectItem 
-                    key={it.id} 
+                <ProjectItem
+                    key={it.id}
                     project={it}
                     showManageButton={isLoggedIn}
                     zIndex={index + 1}

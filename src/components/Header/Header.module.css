@@ -24,7 +24,7 @@
   a {
     font-size: 14px;
     font-weight: 400;
-    transition: all ease 0.5s;
+    transition: color ease 0.5s;
 
     &:hover {
       color: var(--color-primary);
