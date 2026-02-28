@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { authRepository } from "../../data/authRepository";
 import type { LoginRequest } from "../../types/domain/authTypes";
 import { useForm } from "react-hook-form";
-import Input from "../Input/Input";
-import SubmitButton from "../Button/SubmitButton";
+import TextInput from "../Form/Input/TextInput";
+import SubmitButton from "../Form/Button/SubmitButton";
 import type { MouseEvent, RefObject } from "react";
 import styled from './LoginFormDialog.module.css';
 
@@ -36,7 +36,7 @@ const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps)
             onClick={handleBackDrop}>
             <div onClick={(e) => e.stopPropagation()}>
                 <form onSubmit={handleSubmit(onLogin)}>
-                    <Input
+                    <TextInput
                         type='email'
                         placheholder='이메일'
                         registration={register('email', {
@@ -44,7 +44,7 @@ const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps)
                             pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                         })}
                     />
-                    <Input
+                    <TextInput
                         type='password'
                         placheholder='비밀번호'
                         registration={register('password', {

@@ -2,10 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, type ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import SubmitButton from "../../components/Button/SubmitButton";
-import Input from "../../components/Input/Input";
+import SubmitButton from "../../components/Form/Button/SubmitButton";
+import TextInput from "../../components/Form/Input/TextInput";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
-import TextArea from "../../components/TextArea/TextArea";
+import TextArea from "../../components/Form/TextArea/TextArea";
 import { PATHS } from "../../consts/Paths";
 import { QUERY_KEYS } from "../../consts/QueryKeys";
 import { projectRepository } from "../../data/projectRepository";
@@ -101,8 +101,9 @@ const ProjectPost = () => {
         <>
             <input type='file' accept='image/*' onChange={handleSelectImage} />
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
+                <TextInput
                     type='text'
+                    fontWeight='medieum'
                     placheholder='제목을 입력하세요'
                     registration={register('title', {
                         required: true
@@ -118,13 +119,13 @@ const ProjectPost = () => {
                         return <option key={it.id} value={it.id}>{it.label}</option>
                     })}
                 </select>
-                <Input
+                {/* <TextInput
                     type='date'
                     registration={register('startDate', {
                         required: true
                     })}
                 />
-                <Input
+                <TextInput
                     type='date'
                     registration={register('endDate', {
                         validate: (value, formValues) => {
@@ -132,7 +133,7 @@ const ProjectPost = () => {
                             return value >= formValues.startDate || '종료일은 시작일보다 빠를 수 없습니다.'
                         }
                     })}
-                />
+                /> */}
                 <TextArea
                     placeholder='내용...'
                     disabled={imageUploadPending}
@@ -140,13 +141,13 @@ const ProjectPost = () => {
                         required: true
                     })}
                 />
-                <Input
-                    type='text'
+                <TextInput
+                    type='url'
                     placheholder='https://... (github)'
                     registration={register('projectUrl')}
                 />
-                <Input
-                    type='text'
+                <TextInput
+                    type= 'url'
                     placheholder='https://... (추가 링크)'
                     registration={register('additionalUrl')}
                 />

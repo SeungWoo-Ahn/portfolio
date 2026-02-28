@@ -8,9 +8,9 @@ import { blogRepository } from "../../data/blogRepository";
 import { useEffect, type ChangeEvent } from "react";
 import { PATHS } from "../../consts/Paths";
 import { blogMapper } from "../../types/mapper/blogMapper";
-import Input from "../../components/Input/Input";
-import TextArea from "../../components/TextArea/TextArea";
-import SubmitButton from "../../components/Button/SubmitButton";
+import TextInput from "../../components/Form/Input/TextInput";
+import TextArea from "../../components/Form/TextArea/TextArea";
+import SubmitButton from "../../components/Form/Button/SubmitButton";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
 
 const BlogPost = () => {
@@ -100,7 +100,7 @@ const BlogPost = () => {
         <>
             <input type='file' accept='image/*' onChange={handleSelectImage} />
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Input
+                <TextInput
                     type='text'
                     placheholder='제목을 입력하세요'
                     registration={register('title', {
