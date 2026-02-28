@@ -6,20 +6,17 @@
   z-index: 5;
   padding: 0 24px;  
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: var(--color-white);
 }
 
-.logo {
-  font-size: 14px;
-  font-weight: 500;
-}
 
 .nav {
   display: flex;
+  justify-content: space-around;
   align-items: center;
-  gap: 24px;
+  width: 100%;
 
   a {
     font-size: 14px;

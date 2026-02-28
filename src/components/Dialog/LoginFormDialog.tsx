@@ -40,7 +40,7 @@ const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps)
                         type='email'
                         placheholder='이메일'
                         registration={register('email', {
-                            required: true,
+                            required: '이메일을 입력해주세요',
                             pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                         })}
                     />
@@ -48,7 +48,7 @@ const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps)
                         type='password'
                         placheholder='비밀번호'
                         registration={register('password', {
-                            required: true
+                            required: '비밀번호를 입력해주세요'
                         })}
                     />
                     <SubmitButton text='로그인' isLoading={mututation.isPending} />

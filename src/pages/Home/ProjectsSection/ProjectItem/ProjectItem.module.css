@@ -8,10 +8,6 @@
     background-color: var(--color-white);
     transition: transform 0.3s;
 
-    &:first-child {
-        margin-top: 0;
-    }
-
     &:hover {
         transform: translateY(-52px);
     }
