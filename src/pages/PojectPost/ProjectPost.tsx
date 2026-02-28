@@ -1,19 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, type ChangeEvent } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import SubmitButton from "../../components/Form/Button/SubmitButton";
+import DateInput from "../../components/Form/Input/DateInput";
+import FileInput from "../../components/Form/Input/FileInput";
+import Select from "../../components/Form/Input/Select";
 import TextInput from "../../components/Form/Input/TextInput";
-import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
 import TextArea from "../../components/Form/TextArea/TextArea";
+import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
 import { PATHS } from "../../consts/Paths";
 import { QUERY_KEYS } from "../../consts/QueryKeys";
 import { projectRepository } from "../../data/projectRepository";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
-import Select from "../../components/Form/Input/Select";
-import DateInput from "../../components/Form/Input/DateInput";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -83,13 +84,9 @@ const ProjectPost = () => {
     const isLoading = imageUploadPending &&
         editMode ? updateMutation.isPending : createMutation.isPending;
 
-    const handleSelectImage = (event: ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        if (!selectedFile) {
-            return;
-        }
+    const uploadImage = (file: File) => {
         imageUploadMutate(
-            { bucket: 'projects', file: selectedFile },
+            { bucket: 'projects', file: file },
             {
                 onSuccess: (url) => {
                     const originContent = getValues('content');
@@ -98,7 +95,6 @@ const ProjectPost = () => {
                 },
             }
         )
-        event.target.value = '';
     }
 
     const onSubmit = (payload: ProjectCreatePayload) => {
@@ -114,7 +110,6 @@ const ProjectPost = () => {
 
     return (
         <>
-            <input type='file' accept='image/*' onChange={handleSelectImage} />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextInput
                     type='text'
@@ -140,11 +135,12 @@ const ProjectPost = () => {
                 <DateInput
                     label='시작 날짜'
                     name='startDate'
-                    control={control}/>
+                    control={control} />
                 <DateInput
                     label='종료 날짜'
                     name='endDate'
-                    control={control}/>
+                    control={control} />
+                <FileInput onSelectedFile={uploadImage} />
                 <TextArea
                     placeholder='내용...'
                     disabled={imageUploadPending}

@@ -1,17 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import type { BlogPostCreatePayload } from "../../types/uiModel/blogUiModel";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useImageUpload } from "../../hooks/useImageUpload";
-import { QUERY_KEYS } from "../../consts/QueryKeys";
-import { blogRepository } from "../../data/blogRepository";
-import { useEffect, type ChangeEvent } from "react";
-import { PATHS } from "../../consts/Paths";
-import { blogMapper } from "../../types/mapper/blogMapper";
+import { useNavigate, useParams } from "react-router-dom";
+import SubmitButton from "../../components/Form/Button/SubmitButton";
+import FileInput from "../../components/Form/Input/FileInput";
 import TextInput from "../../components/Form/Input/TextInput";
 import TextArea from "../../components/Form/TextArea/TextArea";
-import SubmitButton from "../../components/Form/Button/SubmitButton";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
+import { PATHS } from "../../consts/Paths";
+import { QUERY_KEYS } from "../../consts/QueryKeys";
+import { blogRepository } from "../../data/blogRepository";
+import { useImageUpload } from "../../hooks/useImageUpload";
+import { blogMapper } from "../../types/mapper/blogMapper";
+import type { BlogPostCreatePayload } from "../../types/uiModel/blogUiModel";
 
 const BlogPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -37,11 +38,11 @@ const BlogPost = () => {
     }, [isError, navigate]);
 
     useEffect(() => {
-            if (editMode && data) {
-                const payload = blogMapper.toPayload(data);
-                reset(payload);
-            }
-        }, [data, editMode]);
+        if (editMode && data) {
+            const payload = blogMapper.toPayload(data);
+            reset(payload);
+        }
+    }, [data, editMode]);
 
     const handleSuccess = async () => {
         await queryClient.invalidateQueries({
@@ -67,13 +68,9 @@ const BlogPost = () => {
     const isLoading = imageUploadPending &&
         editMode ? updateMutation.isPending : createMutation.isPending;
 
-    const handleSelectImage = (event: ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = event.target.files?.[0];
-        if (!selectedFile) {
-            return;
-        }
+    const uploadImage = (file: File) => {
         imageUploadMutate(
-            { bucket: 'blogs', file: selectedFile },
+            { bucket: 'blogs', file: file },
             {
                 onSuccess: (url) => {
                     const originContent = getValues('content');
@@ -82,7 +79,6 @@ const BlogPost = () => {
                 },
             }
         )
-        event.target.value = '';
     }
 
     const onSubmit = (payload: BlogPostCreatePayload) => {
@@ -98,7 +94,6 @@ const BlogPost = () => {
 
     return (
         <>
-            <input type='file' accept='image/*' onChange={handleSelectImage} />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <TextInput
                     type='text'
@@ -107,6 +102,7 @@ const BlogPost = () => {
                         required: true
                     })}
                 />
+                <FileInput onSelectedFile={uploadImage} />
                 <TextArea
                     placeholder='내용...'
                     disabled={imageUploadPending}
