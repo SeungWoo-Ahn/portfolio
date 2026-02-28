@@ -4,13 +4,16 @@ import type { LoginRequest } from "../../types/domain/authTypes";
 import { useForm } from "react-hook-form";
 import Input from "../Input/Input";
 import SubmitButton from "../Button/SubmitButton";
+import type { MouseEvent, RefObject } from "react";
+import styled from './LoginFormDialog.module.css';
 
 interface LoginFormDialogProps {
-    open: boolean;
+    ref: RefObject<HTMLDialogElement | null>;
     dismiss: () => void;
+    handleBackDrop: (e: MouseEvent<HTMLDialogElement>) => void;
 }
 
-const LoginFormDialog = ({ open, dismiss }: LoginFormDialogProps) => {
+const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps) => {
     const { register, handleSubmit, reset } = useForm<LoginRequest>();
 
     const mututation = useMutation({
@@ -27,7 +30,10 @@ const LoginFormDialog = ({ open, dismiss }: LoginFormDialogProps) => {
     };
 
     return (
-        <dialog open={open}>
+        <dialog 
+            ref={ref}
+            className={styled.dialog}
+            onClick={handleBackDrop}>
             <form onSubmit={handleSubmit(onLogin)}>
                 <Input 
                     type='email'
