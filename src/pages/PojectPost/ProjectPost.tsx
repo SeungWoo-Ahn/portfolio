@@ -118,19 +118,27 @@ const ProjectPost = () => {
                         fontWeight='medieum'
                         placheholder='제목을 입력하세요'
                         registration={register('title', {
-                            required: true
+                            required: '제목을 입력해주세요'
                         })} />
                     <div className={styled.rowWrapper}>
                         <div className={styled.rowItem}>
                             <DateInput
                                 label='시작 날짜'
                                 name='startDate'
-                                control={control} />
+                                control={control}
+                                rules={{ required: '시작 날짜를 선택해주세요' }} />
                         </div>
                         <div className={styled.rowItem}>
                             <DateInput
                                 label='종료 날짜'
                                 name='endDate'
+                                rules={{
+                                    validate: (value, formValues) => {
+                                        if (!value) return true;
+                                        return value >= formValues.startDate
+                                            || '종료 날짜는 시작 날짜보다 빠를 수 없습니다';
+                                    }
+                                }}
                                 control={control} />
                         </div>
                         <div className={styled.rowItem}>
@@ -139,7 +147,7 @@ const ProjectPost = () => {
                                 valueKey='id'
                                 labelKey='label'
                                 registration={register('category', {
-                                    required: true
+                                    required: '프로젝트 유형을 선택해주세요'
                                 })} />
                         </div>
                         <div className={styled.rowItem}>
@@ -148,7 +156,7 @@ const ProjectPost = () => {
                                 valueKey='id'
                                 labelKey='label'
                                 registration={register('status', {
-                                    required: true
+                                    required: '프로젝트 상태를 선택해주세요'
                                 })} />
                         </div>
                     </div>
@@ -175,7 +183,7 @@ const ProjectPost = () => {
                             placeholder='내용...'
                             disabled={imageUploadPending}
                             registration={register('content', {
-                                required: true
+                                required: '내용을 입력해주세요'
                             })}
                         />
                     </div>

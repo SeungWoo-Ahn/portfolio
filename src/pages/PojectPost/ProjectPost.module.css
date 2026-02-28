@@ -20,6 +20,7 @@
 
 .rowWrapper {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-end;
     width: 100%;
 
@@ -41,4 +42,19 @@
     overflow: auto;
     padding: 24px 0;
     background-color: #f8f8f8;
+}
+
+@media (max-width: 1840px) {
+    .rowWrapper {
+        .rowItem {
+            flex: 0 0 50%;
+        }
+    }
+}
+
+
+@media (max-width: 1024px) {
+    .markdownContainer {
+        display: none;
+    }
 }

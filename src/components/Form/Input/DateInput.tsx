@@ -1,4 +1,4 @@
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import { Controller, type Control, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
 import styled from './DateInput.module.css';
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
@@ -9,10 +9,11 @@ interface DateInputProps<T extends FieldValues> {
     label: string;
     name: Path<T>;
     control: Control<T>;
+    rules?: RegisterOptions<T, Path<T>>;
 }
 
 export const DateInput = <T extends FieldValues>(
-    { label, name, control, }: DateInputProps<T>
+    { label, name, control, rules }: DateInputProps<T>
 ) => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -21,8 +22,9 @@ export const DateInput = <T extends FieldValues>(
         <div className={styled.container} ref={containerRef}>
             <label className={styled.label}>{label}</label>
             <Controller
-                control={control}
                 name={name}
+                control={control}
+                rules={rules}
                 render={({ field: { value, onChange } }) => (
                     <div className={styled.wrapper}>
                         <div

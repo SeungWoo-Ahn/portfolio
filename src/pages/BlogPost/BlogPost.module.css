@@ -36,3 +36,9 @@
     padding: 24px 0;
     background-color: #f8f8f8;
 }
+
+@media (max-width: 1024px) {
+    .markdownContainer {
+        display: none;
+    }
+}
