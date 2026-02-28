@@ -4,6 +4,7 @@ import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import "highlight.js/styles/github-dark.css";
 import remarkGfm from "remark-gfm";
+import styled from './MarkdownPreview.module.css';
 
 interface MarkdownPreviewProps {
     markdown: string;
@@ -11,25 +12,22 @@ interface MarkdownPreviewProps {
 
 const MarkdownPreview = ({ markdown }: MarkdownPreviewProps) => {
     return (
-        <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeHighlight]}
-            components={{
-                img: ({ node, ...props }) => (
-                    <img
-                        width={768}
-                        loading='lazy'
-                        style={{
-                            display: 'block',
-                            margin: '0 auto',
-                        }}
-                        {...props}
-                    />
-                )
-            }}
-        >
-            {markdown}
-        </ReactMarkdown>
+        <div className={styled.markdownWrapper}>
+            <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeHighlight]}
+                components={{
+                    img: ({ ...props }) => (
+                        <img loading='lazy' {...props} />
+                    ),
+                    a: ({ ...props }) => (
+                        <a target='_blank' {...props}></a>
+                    )
+                }}
+            >
+                {markdown}
+            </ReactMarkdown>
+        </div>
     );
 };
 
