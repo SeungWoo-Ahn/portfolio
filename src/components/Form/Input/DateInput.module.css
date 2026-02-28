@@ -1,0 +1,56 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    width: 100%;
+    padding: 8px;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 4px 0;
+    background: var(--color-white);
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+/* react-calendar */
+.calendarPopup {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 2;
+    margin-top: 5px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    background: var(--color-white);
+}
+
+:global(.react-calendar) {
+    border: none !important;
+}
+
+.saturday {
+    color: var(--color-primary) !important;
+}
+
+:global(.react-calendar__tile--now) {
+    background: #e6f7ff !important;
+    color: var(--color-primary) !important;
+    font-weight: bold;
+}
+
+:global(.react-calendar__tile--active).saturday {
+    background: var(--color-primary) !important;
+    color: var(--color-white) !important;
+}

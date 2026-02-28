@@ -13,6 +13,7 @@ import { useImageUpload } from "../../hooks/useImageUpload";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
 import Select from "../../components/Form/Input/Select";
+import DateInput from "../../components/Form/Input/DateInput";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -20,7 +21,15 @@ const ProjectPost = () => {
     const editMode = Boolean(id);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<ProjectCreatePayload>({
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        watch,
+        getValues,
+        setValue,
+    } = useForm<ProjectCreatePayload>({
         defaultValues: {
             category: 'PERSONAL',
             status: 'NOT_DEPLOYED'
@@ -128,21 +137,14 @@ const ProjectPost = () => {
                     registration={register('category', {
                         required: true
                     })} />
-                {/* <TextInput
-                    type='date'
-                    registration={register('startDate', {
-                        required: true
-                    })}
-                />
-                <TextInput
-                    type='date'
-                    registration={register('endDate', {
-                        validate: (value, formValues) => {
-                            if (!value) return true;
-                            return value >= formValues.startDate || '종료일은 시작일보다 빠를 수 없습니다.'
-                        }
-                    })}
-                /> */}
+                <DateInput
+                    label='시작 날짜'
+                    name='startDate'
+                    control={control}/>
+                <DateInput
+                    label='종료 날짜'
+                    name='endDate'
+                    control={control}/>
                 <TextArea
                     placeholder='내용...'
                     disabled={imageUploadPending}
