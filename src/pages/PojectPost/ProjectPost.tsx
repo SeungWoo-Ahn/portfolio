@@ -12,6 +12,7 @@ import { projectRepository } from "../../data/projectRepository";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
+import Select from "../../components/Form/Input/Select";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -19,7 +20,12 @@ const ProjectPost = () => {
     const editMode = Boolean(id);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<ProjectCreatePayload>();
+    const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<ProjectCreatePayload>({
+        defaultValues: {
+            category: 'PERSONAL',
+            status: 'NOT_DEPLOYED'
+        }
+    });
     const { mutate: imageUploadMutate, isPending: imageUploadPending } = useImageUpload();
     const markdown = watch('content');
 
@@ -72,7 +78,7 @@ const ProjectPost = () => {
         const selectedFile = event.target.files?.[0];
         if (!selectedFile) {
             return;
-        } 
+        }
         imageUploadMutate(
             { bucket: 'projects', file: selectedFile },
             {
@@ -80,7 +86,7 @@ const ProjectPost = () => {
                     const originContent = getValues('content');
                     const imageMarkdown = `![](${url})`;
                     setValue('content', `${originContent}\n${imageMarkdown}`);
-                 },
+                },
             }
         )
         event.target.value = '';
@@ -107,18 +113,21 @@ const ProjectPost = () => {
                     placheholder='제목을 입력하세요'
                     registration={register('title', {
                         required: true
-                    })}
-                />
-                <select {...register('status', { required: true })}>
-                    {projectStatusEntries.map(it => {
-                        return <option key={it.id} value={it.id}>{it.label}</option>
-                    })}
-                </select>
-                <select {...register('category', { required: true })}>
-                    {projectCategoryEntries.map(it => {
-                        return <option key={it.id} value={it.id}>{it.label}</option>
-                    })}
-                </select>
+                    })} />
+                <Select
+                    options={projectStatusEntries}
+                    valueKey={'id'}
+                    labelKey={'label'}
+                    registration={register('status', {
+                        required: true
+                    })} />
+                <Select
+                    options={projectCategoryEntries}
+                    valueKey={'id'}
+                    labelKey={'label'}
+                    registration={register('category', {
+                        required: true
+                    })} />
                 {/* <TextInput
                     type='date'
                     registration={register('startDate', {
@@ -147,7 +156,7 @@ const ProjectPost = () => {
                     registration={register('projectUrl')}
                 />
                 <TextInput
-                    type= 'url'
+                    type='url'
                     placheholder='https://... (추가 링크)'
                     registration={register('additionalUrl')}
                 />
