@@ -13,6 +13,7 @@ import { blogRepository } from "../../data/blogRepository";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { blogMapper } from "../../types/mapper/blogMapper";
 import type { BlogPostCreatePayload } from "../../types/uiModel/blogUiModel";
+import styled from './BlogPost.module.css';
 
 const BlogPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -93,27 +94,37 @@ const BlogPost = () => {
     }
 
     return (
-        <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <TextInput
-                    type='text'
-                    placheholder='제목을 입력하세요'
-                    registration={register('title', {
-                        required: true
-                    })}
-                />
-                <FileInput onSelectedFile={uploadImage} />
-                <TextArea
-                    placeholder='내용...'
-                    disabled={imageUploadPending}
-                    registration={register('content', {
-                        required: true
-                    })}
-                />
+        <div className={styled.container}>
+            <form
+                className={styled.form}
+                onSubmit={handleSubmit(onSubmit)}>
+                <div className={styled.inputWrapper}>
+                    <TextInput
+                        type='text'
+                        placheholder='제목을 입력하세요'
+                        registration={register('title', {
+                            required: '제목을 입력해주세요'
+                        })}
+                    />
+                    <div className={styled.rowWrapper}>
+                        <FileInput onSelectedFile={uploadImage} />
+                    </div>
+                    <div className={styled.textareaWrapper}>
+                        <TextArea
+                            placeholder='내용...'
+                            disabled={imageUploadPending}
+                            registration={register('content', {
+                                required: '내용을 입력해주세요'
+                            })}
+                        />
+                    </div>
+                </div>
                 <FormManager isLoading={isLoading} />
             </form>
-            <MarkdownPreview markdown={markdown} />
-        </>
+            <div className={styled.markdownContainer}>
+                <MarkdownPreview markdown={markdown} />
+            </div>
+        </div>
     );
 };
 
