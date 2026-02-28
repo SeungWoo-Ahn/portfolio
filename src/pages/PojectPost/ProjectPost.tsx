@@ -15,6 +15,7 @@ import { projectRepository } from "../../data/projectRepository";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
+import styled from './ProjectPost.module.css';
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -58,7 +59,7 @@ const ProjectPost = () => {
             const payload = projectMapper.toPayload(data);
             reset(payload);
         }
-    }, [data, editMode]);
+    }, [data, editMode, reset]);
 
     const handleSuccess = async () => {
         await queryClient.invalidateQueries({
@@ -109,59 +110,82 @@ const ProjectPost = () => {
     }
 
     return (
-        <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <TextInput
-                    type='text'
-                    fontWeight='medieum'
-                    placheholder='제목을 입력하세요'
-                    registration={register('title', {
-                        required: true
-                    })} />
-                <Select
-                    options={projectStatusEntries}
-                    valueKey={'id'}
-                    labelKey={'label'}
-                    registration={register('status', {
-                        required: true
-                    })} />
-                <Select
-                    options={projectCategoryEntries}
-                    valueKey={'id'}
-                    labelKey={'label'}
-                    registration={register('category', {
-                        required: true
-                    })} />
-                <DateInput
-                    label='시작 날짜'
-                    name='startDate'
-                    control={control} />
-                <DateInput
-                    label='종료 날짜'
-                    name='endDate'
-                    control={control} />
-                <FileInput onSelectedFile={uploadImage} />
-                <TextArea
-                    placeholder='내용...'
-                    disabled={imageUploadPending}
-                    registration={register('content', {
-                        required: true
-                    })}
-                />
-                <TextInput
-                    type='url'
-                    placheholder='https://... (github)'
-                    registration={register('projectUrl')}
-                />
-                <TextInput
-                    type='url'
-                    placheholder='https://... (추가 링크)'
-                    registration={register('additionalUrl')}
-                />
-                <FormManager isLoading={isLoading}/>
+        <div className={styled.container}>
+            <form className={styled.form} onSubmit={handleSubmit(onSubmit)}>
+                <div className={styled.inputWrapper}>
+                    <TextInput
+                        type='text'
+                        fontWeight='medieum'
+                        placheholder='제목을 입력하세요'
+                        registration={register('title', {
+                            required: true
+                        })} />
+                    <div className={styled.rowWrapper}>
+                        <div className={styled.rowItem}>
+                            <DateInput
+                                label='시작 날짜'
+                                name='startDate'
+                                control={control} />
+                        </div>
+                        <div className={styled.rowItem}>
+                            <DateInput
+                                label='종료 날짜'
+                                name='endDate'
+                                control={control} />
+                        </div>
+                        <div className={styled.rowItem}>
+                            <Select
+                                options={projectCategoryEntries}
+                                valueKey='id'
+                                labelKey='label'
+                                registration={register('category', {
+                                    required: true
+                                })} />
+                        </div>
+                        <div className={styled.rowItem}>
+                            <Select
+                                options={projectStatusEntries}
+                                valueKey='id'
+                                labelKey='label'
+                                registration={register('status', {
+                                    required: true
+                                })} />
+                        </div>
+                    </div>
+                    <div className={styled.rowWrapper}>
+                        <div className={styled.rowItem}>
+                            <TextInput
+                                type='url'
+                                placheholder='https://... (github)'
+                                registration={register('projectUrl')}
+                            />
+                        </div>
+                        <div className={styled.rowItem}>
+                            <TextInput
+                                type='url'
+                                placheholder='https://... (추가 링크)'
+                                registration={register('additionalUrl')}
+                            />
+                        </div>
+                        <FileInput onSelectedFile={uploadImage} />
+
+                    </div>
+                    <div className={styled.textareaWrapper}>
+                        <TextArea
+                            placeholder='내용...'
+                            disabled={imageUploadPending}
+                            registration={register('content', {
+                                required: true
+                            })}
+                        />
+                    </div>
+                </div>
+                <FormManager isLoading={isLoading} />
             </form>
-            <MarkdownPreview markdown={markdown} />
-        </>
+            <div className={styled.markdownContainer}>
+                <MarkdownPreview markdown={markdown} />
+            </div>
+        </div>
     );
 };
 

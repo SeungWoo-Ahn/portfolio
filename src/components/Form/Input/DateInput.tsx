@@ -29,7 +29,16 @@ export const DateInput = <T extends FieldValues>(
                             className={styled.input}
                             onClick={() => setIsOpen(!isOpen)}>
                             {value ? dateMapper.toFullDate(value) : '날짜를 선택하세요'}
-                            <span className={styled.icon}>📅</span>
+                            {value && (
+                                <button 
+                                    className={styled.deleteButton}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onChange('')
+                                    }}>
+                                    삭제
+                                </button>
+                            )}
                         </div>
                         {isOpen && (
                             <div className={styled.calendarPopup}>

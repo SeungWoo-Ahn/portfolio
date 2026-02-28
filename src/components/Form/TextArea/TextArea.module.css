@@ -1,6 +1,6 @@
 .textarea {
     width: 100%;
-    padding: 8px;
+    padding: 16px 8px;
     resize: none;
     font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono';
     font-size: 18px;
