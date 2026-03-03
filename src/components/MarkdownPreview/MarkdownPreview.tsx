@@ -18,7 +18,7 @@ const MarkdownPreview = ({ markdown }: MarkdownPreviewProps) => {
                 rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeHighlight]}
                 components={{
                     img: ({ ...props }) => (
-                        <img loading='lazy' {...props} />
+                        <img loading='lazy' alt={props.alt || ''} {...props} />
                     ),
                     a: ({ ...props }) => (
                         <a target='_blank' {...props}></a>

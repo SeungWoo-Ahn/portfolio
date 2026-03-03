@@ -11,6 +11,7 @@ function App() {
       <ToastContainer 
         position='top-center'
         newestOnTop
+        autoClose={3_000}
         limit={3}
         theme='light'/>
       <BrowserRouter>

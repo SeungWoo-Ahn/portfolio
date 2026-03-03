@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useForm, type FieldErrors } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import DateInput from "../../components/Form/Input/DateInput";
@@ -9,14 +8,15 @@ import TextInput from "../../components/Form/Input/TextInput";
 import FormManager from "../../components/Form/Manager/FormManager";
 import TextArea from "../../components/Form/TextArea/TextArea";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
-import { PATHS } from "../../consts/Paths";
 import { QUERY_KEYS } from "../../consts/QueryKeys";
 import { projectRepository } from "../../data/projectRepository";
 import { useImageUpload } from "../../hooks/useImageUpload";
+import { useToast } from "../../hooks/useToast";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
 import styled from './ProjectPost.module.css';
-import { useToast } from "../../hooks/useToast";
+import { useEffect } from "react";
+import { PATHS } from "../../consts/Paths";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -24,15 +24,33 @@ const ProjectPost = () => {
     const editMode = Boolean(id);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { showToast } = useToast();
+
+    const { data, isError } = useQuery({
+        queryKey: QUERY_KEYS.projects.detail(projectId!),
+        queryFn: () => projectRepository.getProject(projectId!),
+        select: (data) => projectMapper.toPayload(data),
+        enabled: editMode,
+        retry: false,
+    });
+
+    useEffect(() => {
+        if (isError) {
+            setTimeout(() => {
+                navigate(PATHS.HOME, { replace: true });
+            }, 1_500);
+        }
+    }, [isError, navigate]);
+
     const {
         register,
         control,
         handleSubmit,
-        reset,
         watch,
         getValues,
         setValue,
     } = useForm<ProjectCreatePayload>({
+        values: data,
         defaultValues: {
             category: 'PERSONAL',
             status: 'NOT_DEPLOYED'
@@ -40,53 +58,25 @@ const ProjectPost = () => {
     });
     const { mutate: imageUploadMutate, isPending: imageUploadPending } = useImageUpload();
     const markdown = watch('content');
-    const { showToast } = useToast();
 
-    const { data, isError } = useQuery({
-        queryKey: QUERY_KEYS.projects.detail(projectId!),
-        queryFn: () => projectRepository.getProject(projectId!),
-        enabled: editMode,
-    });
-
-    useEffect(() => {
-        if (isError) {
-            alert('데이터 로드에 실패했어요');
-            navigate(-1);
-        }
-    }, [isError, navigate])
-
-
-    useEffect(() => {
-        if (editMode && data) {
-            const payload = projectMapper.toPayload(data);
-            reset(payload);
-        }
-    }, [data, editMode, reset]);
+    const handleSuccess = async (message: string) => {
+        await queryClient.invalidateQueries({
+            queryKey: QUERY_KEYS.projects.all,
+        });
+        showToast('success', message);
+        navigate(-1);
+    }
 
     const createMutation = useMutation({
         mutationFn: (payload: ProjectCreatePayload) =>
             projectRepository.createProject(projectMapper.toRequest(payload)),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.projects.all,
-            });
-            showToast('success', '프로젝트를 추가했습니다');
-            navigate(PATHS.HOME);
-        },
-        onError: (error) => { alert(error.message) }
+        onSuccess: () => handleSuccess('프로젝트를 추가했습니다'),
     });
 
     const updateMutation = useMutation({
         mutationFn: ({ id, payload }: { id: number, payload: ProjectCreatePayload }) =>
             projectRepository.updateProject(id, projectMapper.toRequest(payload)),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.projects.all,
-            });
-            showToast('success', '프로젝트를 수정했습니다');
-            navigate(PATHS.HOME);
-        },
-        onError: (error) => { alert(error.message) }
+        onSuccess: () => handleSuccess('프로젝트를 수정했습니다'),
     });
 
     const isLoading = imageUploadPending &&
@@ -101,6 +91,9 @@ const ProjectPost = () => {
                     const imageMarkdown = `![](${url})`;
                     setValue('content', `${originContent}\n${imageMarkdown}`);
                 },
+                onError: (error) => {
+                    showToast('error', error.message);
+                }
             }
         )
     }
@@ -116,14 +109,14 @@ const ProjectPost = () => {
         }
     }
 
-    const onSubmitIvalid = (errors: FieldErrors) => {
+    const onSubmitInvalid = (errors: FieldErrors) => {
         const e = Object.values(errors);
         showToast('error', e[0]?.message as string);
     }
 
     return (
         <div className={styled.container}>
-            <form className={styled.form} onSubmit={handleSubmit(onSubmit, onSubmitIvalid)}>
+            <form className={styled.form} onSubmit={handleSubmit(onSubmit, onSubmitInvalid)}>
                 <div className={styled.inputWrapper}>
                     <TextInput
                         type='text'

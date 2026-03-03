@@ -32,7 +32,9 @@ const ProjectsSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
     });
 
     const onDelete = (id: number) => {
-        deleteMutation.mutate(id);
+        if (window.confirm('정말 삭제할까요?')) {
+            deleteMutation.mutate(id);
+        }
     }
 
     return (

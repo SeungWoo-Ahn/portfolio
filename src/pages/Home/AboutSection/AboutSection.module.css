@@ -7,6 +7,12 @@
     font-weight: 300;
     text-align: center;
     cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+
+    &:hover {
+        color: var(--color-primary);
+        transform: translateY(-12px);
+    }
 }
 
 .job {
