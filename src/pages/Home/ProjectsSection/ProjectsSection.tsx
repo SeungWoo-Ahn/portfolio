@@ -7,8 +7,9 @@ import ProjectItem from "./ProjectItem/ProjectItem";
 import styled from '../Home.module.css'
 import { Link } from "react-router-dom";
 import { PATHS } from "../../../consts/Paths";
+import { forwardRef } from "react";
 
-const ProjectsSection = () => {
+const ProjectsSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
     const { isLoggedIn } = useAuth();
     const queryClient = useQueryClient();
 
@@ -33,7 +34,7 @@ const ProjectsSection = () => {
     }
 
     return (
-        <section className={styled.section}>
+        <section className={styled.section} ref={ref}>
             <div className={styled.sectionHeader}>
                 <h2 className={styled.title}>PROJECTS</h2>
                 {isLoggedIn && <Link to={PATHS.PROJECT_POST}>NEW →</Link>}
@@ -48,6 +49,6 @@ const ProjectsSection = () => {
             ))}
         </section>
     );
-};
+});
 
 export default ProjectsSection;

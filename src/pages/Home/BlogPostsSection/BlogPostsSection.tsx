@@ -7,8 +7,9 @@ import styled from '../Home.module.css';
 import BlogPostItem from "./BlogPostItem/BlogPostItem";
 import { Link } from "react-router-dom";
 import { PATHS } from "../../../consts/Paths";
+import { forwardRef } from "react";
 
-const BlogPostsSection = () => {
+const BlogPostsSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
     const { isLoggedIn } = useAuth();
     const queryClient = useQueryClient();
 
@@ -33,7 +34,7 @@ const BlogPostsSection = () => {
     }
 
     return (
-        <section className={styled.section}>
+        <section className={styled.section} ref={ref}>
             <div className={styled.sectionHeader}>
                 <h2 className={styled.title}>BLOG</h2>
                 {isLoggedIn && <Link to={PATHS.BLOG_POST}>NEW →</Link>}
@@ -47,6 +48,6 @@ const BlogPostsSection = () => {
             ))}
         </section>
     );
-};
+});
 
 export default BlogPostsSection;

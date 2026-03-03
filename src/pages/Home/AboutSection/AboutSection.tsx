@@ -7,8 +7,9 @@ import styled from './AboutSection.module.css';
 import { userRepository } from '../../../data/userRepository';
 import { userMapper } from '../../../types/mapper/userMapper';
 import { QUERY_KEYS } from '../../../consts/QueryKeys';
+import { forwardRef } from 'react';
 
-const AboutSection = () => {
+const AboutSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
     const { isLoggedIn } = useAuth();
     const { dialogRef, showDialog, dismissDialog, handleBackDrop } = useDialog();
 
@@ -41,7 +42,7 @@ const AboutSection = () => {
 
     return (
         <>
-            <section className={styled.section}>
+            <section className={styled.section} ref={ref}>
                 <h2 className={styled.name} onClick={onNameClick}>SEUNGWOO AN</h2>
                 <p className={styled.job}>Android Engineer</p>
                 <div className={styled.contactWrapper}>
@@ -78,6 +79,6 @@ const AboutSection = () => {
         </>
 
     );
-}
+});
 
 export default AboutSection;
