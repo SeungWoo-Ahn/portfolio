@@ -18,6 +18,5 @@ export const useImageUpload = () => {
             const publicUrl = storageRepository.getPublicUrl(bucket, path);
             return publicUrl;
         },
-
     });
 };

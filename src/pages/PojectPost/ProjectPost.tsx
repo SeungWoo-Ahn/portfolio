@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldErrors } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import DateInput from "../../components/Form/Input/DateInput";
 import FileInput from "../../components/Form/Input/FileInput";
@@ -16,6 +16,7 @@ import { useImageUpload } from "../../hooks/useImageUpload";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
 import styled from './ProjectPost.module.css';
+import { useToast } from "../../hooks/useToast";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -39,6 +40,7 @@ const ProjectPost = () => {
     });
     const { mutate: imageUploadMutate, isPending: imageUploadPending } = useImageUpload();
     const markdown = watch('content');
+    const { showToast } = useToast();
 
     const { data, isError } = useQuery({
         queryKey: QUERY_KEYS.projects.detail(projectId!),
@@ -61,24 +63,29 @@ const ProjectPost = () => {
         }
     }, [data, editMode, reset]);
 
-    const handleSuccess = async () => {
-        await queryClient.invalidateQueries({
-            queryKey: QUERY_KEYS.projects.all,
-        });
-        navigate(PATHS.HOME);
-    }
-
     const createMutation = useMutation({
         mutationFn: (payload: ProjectCreatePayload) =>
             projectRepository.createProject(projectMapper.toRequest(payload)),
-        onSuccess: handleSuccess,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: QUERY_KEYS.projects.all,
+            });
+            showToast('success', '프로젝트를 추가했습니다');
+            navigate(PATHS.HOME);
+        },
         onError: (error) => { alert(error.message) }
     });
 
     const updateMutation = useMutation({
         mutationFn: ({ id, payload }: { id: number, payload: ProjectCreatePayload }) =>
             projectRepository.updateProject(id, projectMapper.toRequest(payload)),
-        onSuccess: handleSuccess,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: QUERY_KEYS.projects.all,
+            });
+            showToast('success', '프로젝트를 수정했습니다');
+            navigate(PATHS.HOME);
+        },
         onError: (error) => { alert(error.message) }
     });
 
@@ -109,9 +116,14 @@ const ProjectPost = () => {
         }
     }
 
+    const onSubmitIvalid = (errors: FieldErrors) => {
+        const e = Object.values(errors);
+        showToast('error', e[0]?.message as string);
+    }
+
     return (
         <div className={styled.container}>
-            <form className={styled.form} onSubmit={handleSubmit(onSubmit)}>
+            <form className={styled.form} onSubmit={handleSubmit(onSubmit, onSubmitIvalid)}>
                 <div className={styled.inputWrapper}>
                     <TextInput
                         type='text'

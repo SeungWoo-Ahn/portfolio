@@ -3,10 +3,16 @@ import { PATHS } from "./consts/Paths"
 import BlogPost from "./pages/BlogPost/BlogPost"
 import Home from "./pages/Home/Home"
 import ProjectPost from "./pages/PojectPost/ProjectPost"
+import { ToastContainer } from "react-toastify"
 
 function App() {
   return (
     <>
+      <ToastContainer 
+        position='top-center'
+        newestOnTop
+        limit={3}
+        theme='light'/>
       <BrowserRouter>
         <Routes>
           <Route path={PATHS.HOME} element={<Home />} />

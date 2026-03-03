@@ -20,7 +20,7 @@
     font-weight: 300;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .sectionHeader {
         margin-bottom: 96px;
         padding-right: 0;

@@ -1,3 +1,4 @@
+import { wrapStorageError } from "./error/errorHandlers";
 import { supabaseClient } from "./supabase";
 
 export type StorageBucket = 'projects' | 'blogs';
@@ -17,7 +18,9 @@ export const storageRepository: StorageRepository = {
             .from(bucket)
             .upload(filePath, file);
             console.log(error);
-        if (error) throw error;
+        if (error) {
+            throw wrapStorageError(error.statusCode);
+        }
         return data.path;
     },
     getPublicUrl: (bucket: StorageBucket, path: string): string => {

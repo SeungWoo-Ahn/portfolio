@@ -6,6 +6,8 @@ export type BlogPostCreatePayload = {
 export type BlogPostUiModel = {
     id: number;
     title: string;
+    summary: string;
+    coverImageUrl: string;
     content: string;
     createdAt: string;
 }

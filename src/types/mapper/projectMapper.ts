@@ -5,11 +5,11 @@ import { dateMapper } from "./dateMapper";
 const ProjectStatusRecord: Record<ProjectStatus, ProjectStatusUiModel> = {
     NOT_DEPLOYED: {
         label: '미배포',
-        color: ''
+        color: '#F5F5F7'
     },
     DEPLOYED: {
         label: '배포 중',
-        color: ''
+        color: '#C9E9D2'
     }
 };
 
@@ -21,11 +21,11 @@ export const projectStatusEntries = Object.entries(ProjectStatusRecord).map(([ke
 const ProjectCategoryRecord: Record<ProjectCategory, ProjectCategoryUiModel> = {
     PERSONAL: {
         label: '개인 프로젝트',
-        color: ''
+        color: '#FFCDC9'
     },
     TEAM: {
         label: '팀 프로젝트',
-        color: ''
+        color: '#BFECFF'
     }
 };
 

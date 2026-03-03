@@ -2,6 +2,8 @@ import { useState } from "react";
 import type { BlogPostUiModel } from "../../../../types/uiModel/blogUiModel";
 import styled from './BlogPostItem.module.css';
 import MarkdownPreview from "../../../../components/MarkdownPreview/MarkdownPreview";
+import { Link } from "react-router-dom";
+import { PATHS } from "../../../../consts/Paths";
 
 interface BlogPostItemProps {
     blogPost: BlogPostUiModel;
@@ -9,7 +11,7 @@ interface BlogPostItemProps {
     onDelete: () => void;
 }
 
-const BlogPostItem = ({ blogPost }: BlogPostItemProps) => {
+const BlogPostItem = ({ blogPost, showManageButton, onDelete }: BlogPostItemProps) => {
     const [expanded, setExpanded] = useState(false);
 
     const toggleExpanded = () => {
@@ -24,20 +26,24 @@ const BlogPostItem = ({ blogPost }: BlogPostItemProps) => {
                 <div className={styled.headerContent}>
                     <div className={styled.headerTop}>
                         <h3 className={`${styled.title} ${expanded ? styled.expanded : ''}`}>예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀</h3>
-                        {!expanded && <p className={styled.summary}>{blogPost.content}</p>}
+                        <p className={styled.summary}>{blogPost.summary}</p>
                     </div>
                     <p className={styled.headerBottom}>{blogPost.createdAt}</p>
                 </div>
-                {!expanded && (
-                    <img
-                        className={styled.headerImage}
-                        src='https://m.health.chosun.com/site/data/img_dir/2025/04/08/2025040803041_0.jpg'
-                        alt='cover-image'
-                        loading='lazy' />
-                )}
+                <img
+                    className={styled.headerImage}
+                    src={blogPost.coverImageUrl}
+                    alt='cover-image'
+                    loading='lazy' />
             </div>
             <div className={`${styled.body} ${expanded ? styled.expanded : ''}`}>
                 <div className={styled.bodyContent}>
+                    {showManageButton && (
+                        <div className={styled.bodyManageWrapper}>
+                            <Link to={PATHS.BLOG_EDIT(blogPost.id)}>EDIT</Link>
+                            <a onClick={onDelete}>DELETE</a>
+                        </div>
+                    )}
                     <div className={styled.bodyMarkdownWrapper}>
                         <MarkdownPreview markdown={blogPost.content} />
                     </div>

@@ -100,6 +100,16 @@
     margin: 0 auto;
 }
 
+.bodyManageWrapper {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 0;
+    font-size: 16px;
+    text-decoration: underline;
+}
+
 .bodyMarkdownWrapper {
     padding: 16px 0;
 }
@@ -119,8 +129,6 @@
 
         .title {
             font-size: 20px;
-
-
         }
 
         .summary {
@@ -157,19 +165,11 @@
     .headerTop {
         gap: 12px;
 
-        .title {
-            font-size: 14px;
-        }
-
         .summary {
-            font-size: 12px;
+            font-size: 14px;
             -webkit-line-clamp: 3;
             line-clamp: 3;
         }
-    }
-
-    .headerBottom {
-        font-size: 10px;
     }
 
     .headerImage {

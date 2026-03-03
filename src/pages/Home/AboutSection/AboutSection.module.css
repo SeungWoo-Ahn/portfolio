@@ -1,0 +1,114 @@
+.section {
+    padding: 160px 0;
+}
+
+.name {
+    font-size: 108px;
+    font-weight: 300;
+    text-align: center;
+    cursor: pointer;
+}
+
+.job {
+    font-size: 56px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.contactWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 0;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.infoWrapper {
+    width: 1024px;
+    margin: 0 auto;
+    padding: 80px 0;
+}
+
+.intro {
+    font-size: 20px;
+}
+
+.skillsetWrapper {
+    padding-top: 108px;
+}
+
+.skillset {
+    font-size: 56px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.skillsetTable {
+    width: 100%;
+    margin-top: 48px;
+
+    .tableRow {
+        display: flex;
+        align-items: flex-start;
+        padding: 24px 0;
+        font-size: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .tableHead {
+        min-width: 120px;
+        flex-shrink: 0;
+        font-weight: 500;
+    }
+
+    .tableData {
+        flex: 1;
+        word-break: keep-all;
+    }
+}
+
+@media (max-width: 1024px) {
+    .name {
+        font-size: 80px;
+    }
+
+    .job {
+        font-size: 48px;
+    }
+
+    .infoWrapper {
+        width: 90%;
+    }
+
+    .skillset {
+        font-size: 48px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .name {
+        font-size: 64px;
+    }
+
+    .job {
+        font-size: 36px;
+    }
+
+    .skillset {
+        font-size: 36px;
+    }
+
+    .skillsetTable {
+        .tableRow {
+        font-size: 16px;
+        }
+        .tableHead {
+min-width: 80px;
+        }
+    }
+    
+}
