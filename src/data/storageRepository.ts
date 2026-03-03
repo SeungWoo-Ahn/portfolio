@@ -17,7 +17,6 @@ export const storageRepository: StorageRepository = {
             .storage
             .from(bucket)
             .upload(filePath, file);
-            console.log(error);
         if (error) {
             throw wrapStorageError(error.statusCode);
         }

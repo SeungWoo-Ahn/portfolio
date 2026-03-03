@@ -101,6 +101,9 @@ const ProjectPost = () => {
                     const imageMarkdown = `![](${url})`;
                     setValue('content', `${originContent}\n${imageMarkdown}`);
                 },
+                onError: (error) => {
+                    showToast('error', error.message);
+                }
             }
         )
     }
