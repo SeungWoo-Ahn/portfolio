@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useForm, type FieldErrors } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import FileInput from "../../components/Form/Input/FileInput";
@@ -14,6 +13,8 @@ import { useToast } from "../../hooks/useToast";
 import { blogMapper } from "../../types/mapper/blogMapper";
 import type { BlogPostCreatePayload } from "../../types/uiModel/blogUiModel";
 import styled from './BlogPost.module.css';
+import { useEffect } from "react";
+import { PATHS } from "../../consts/Paths";
 
 const BlogPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -21,30 +22,35 @@ const BlogPost = () => {
     const editMode = Boolean(id);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset, watch, getValues, setValue } = useForm<BlogPostCreatePayload>();
-    const { mutate: imageUploadMutate, isPending: imageUploadPending } = useImageUpload();
-    const markdown = watch('content');
     const { showToast } = useToast();
 
     const { data, isError } = useQuery({
         queryKey: QUERY_KEYS.blogs.detail(blogPostId!),
         queryFn: () => blogRepository.getBlogPost(blogPostId!),
+        select: (data) => blogMapper.toPayload(data),
         enabled: editMode,
+        retry: false,
     });
 
     useEffect(() => {
         if (isError) {
-            alert('데이터 로드에 실패했어요');
-            navigate(-1);
+            setTimeout(() => {
+                navigate(PATHS.HOME, { replace: true });
+            }, 1_500);
         }
     }, [isError, navigate]);
 
-    useEffect(() => {
-        if (editMode && data) {
-            const payload = blogMapper.toPayload(data);
-            reset(payload);
-        }
-    }, [data, editMode]);
+    const {
+        register,
+        handleSubmit,
+        watch,
+        getValues,
+        setValue
+    } = useForm<BlogPostCreatePayload>({
+        values: data,
+    });
+    const { mutate: imageUploadMutate, isPending: imageUploadPending } = useImageUpload();
+    const markdown = watch('content');
 
     const handleSuccess = async (message: string) => {
         await queryClient.invalidateQueries({

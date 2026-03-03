@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useForm, type FieldErrors } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import DateInput from "../../components/Form/Input/DateInput";
@@ -16,6 +15,8 @@ import { useToast } from "../../hooks/useToast";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
 import styled from './ProjectPost.module.css';
+import { useEffect } from "react";
+import { PATHS } from "../../consts/Paths";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -23,15 +24,33 @@ const ProjectPost = () => {
     const editMode = Boolean(id);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const { showToast } = useToast();
+
+    const { data, isError } = useQuery({
+        queryKey: QUERY_KEYS.projects.detail(projectId!),
+        queryFn: () => projectRepository.getProject(projectId!),
+        select: (data) => projectMapper.toPayload(data),
+        enabled: editMode,
+        retry: false,
+    });
+
+    useEffect(() => {
+        if (isError) {
+            setTimeout(() => {
+                navigate(PATHS.HOME, { replace: true });
+            }, 1_500);
+        }
+    }, [isError, navigate]);
+
     const {
         register,
         control,
         handleSubmit,
-        reset,
         watch,
         getValues,
         setValue,
     } = useForm<ProjectCreatePayload>({
+        values: data,
         defaultValues: {
             category: 'PERSONAL',
             status: 'NOT_DEPLOYED'
@@ -39,35 +58,13 @@ const ProjectPost = () => {
     });
     const { mutate: imageUploadMutate, isPending: imageUploadPending } = useImageUpload();
     const markdown = watch('content');
-    const { showToast } = useToast();
-
-    const { data, isError } = useQuery({
-        queryKey: QUERY_KEYS.projects.detail(projectId!),
-        queryFn: () => projectRepository.getProject(projectId!),
-        enabled: editMode,
-    });
-
-    useEffect(() => {
-        if (isError) {
-            alert('데이터 로드에 실패했어요');
-            navigate(-1);
-        }
-    }, [isError, navigate]);
-
-
-    useEffect(() => {
-        if (editMode && data) {
-            const payload = projectMapper.toPayload(data);
-            reset(payload);
-        }
-    }, [data, editMode, reset]);
 
     const handleSuccess = async (message: string) => {
-                    await queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.projects.all,
-            });
-            showToast('success', message);
-            navigate(-1);
+        await queryClient.invalidateQueries({
+            queryKey: QUERY_KEYS.projects.all,
+        });
+        showToast('success', message);
+        navigate(-1);
     }
 
     const createMutation = useMutation({
