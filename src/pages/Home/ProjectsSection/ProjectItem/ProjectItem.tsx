@@ -27,10 +27,14 @@ const ProjectItem = ({ project, showManageButton, zIndex, onDelete }: ProjectIte
             <div className={styled.header}>
                 <div className={styled.headerTop}>
                     <h3 className={styled.headerTitle}>{project.title}</h3>
-                    <span className={styled.headerChip}>
+                    <span 
+                        className={styled.headerChip}
+                        style={{ backgroundColor: project.category.color }}>
                         {project.category.label}
                     </span>
-                    <span className={styled.headerChip}>
+                    <span 
+                        className={styled.headerChip}
+                        style={{ backgroundColor: project.status.color }}>
                         {project.status.label}
                     </span>
                 </div>
