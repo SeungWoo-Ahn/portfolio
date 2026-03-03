@@ -2,22 +2,17 @@
     padding: 16px;
     background-color: var(--color-white);
     color: var(--color-font);
-    transition: background-color 0.3s ease,
-        color 0.3s ease,
-        transform 0.3s ease-out;
+    transition: transform 0.3s;
     cursor: pointer;
 
     &:hover {
-        background-color: var(--color-font);
-        color: var(--color-white);
         transform: translateY(-10px);
     }
 }
 
 .header {
     display: flex;
-    gap: 40%;
-    height: 360px;
+    gap: 30%;
 
     &.expanded {
         height: 100%;
@@ -76,8 +71,9 @@
 
 .headerImage {
     flex-shrink: 0;
-    width: 480px;
-    height: 360px;
+    width: auto;
+    height: 300px;
+    aspect-ratio: 16 / 9;
 }
 
 /* 바디 */
@@ -143,7 +139,6 @@
     }
 
     .headerImage {
-        width: 360px;
         height: 240px;
     }
 
@@ -173,7 +168,6 @@
     }
 
     .headerImage {
-        width: 150px;
         height: 100px;
     }
 }

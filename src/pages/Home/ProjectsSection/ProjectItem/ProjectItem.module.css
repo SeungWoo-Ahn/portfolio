@@ -92,13 +92,13 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    font-size: 16px;
+    font-size: 18px;
     text-decoration: underline;
     color: var(--color-primary);
 }
 
 .bodyMarkdownWrapper {
-    padding: 32px 0;
+    padding-bottom: 60px;
 }
 
 @media (max-width: 1024px) {

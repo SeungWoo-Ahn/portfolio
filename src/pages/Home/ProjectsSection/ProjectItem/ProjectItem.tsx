@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import type { ProjectUiModel } from "../../../../types/uiModel/projectUiModel";
 import styled from './ProjectItem.module.css';
 import MarkdownPreview from "../../../../components/MarkdownPreview/MarkdownPreview";
@@ -19,6 +19,10 @@ const ProjectItem = ({ project, showManageButton, zIndex, onDelete }: ProjectIte
         setExpanded(it => !it);
     }
 
+    const handleHref = (e: React.MouseEvent) => {
+        e.stopPropagation();
+    }
+
     return (
         <article
             className={styled.article}
@@ -27,12 +31,12 @@ const ProjectItem = ({ project, showManageButton, zIndex, onDelete }: ProjectIte
             <div className={styled.header}>
                 <div className={styled.headerTop}>
                     <h3 className={styled.headerTitle}>{project.title}</h3>
-                    <span 
+                    <span
                         className={styled.headerChip}
                         style={{ backgroundColor: project.category.color }}>
                         {project.category.label}
                     </span>
-                    <span 
+                    <span
                         className={styled.headerChip}
                         style={{ backgroundColor: project.status.color }}>
                         {project.status.label}
@@ -51,8 +55,8 @@ const ProjectItem = ({ project, showManageButton, zIndex, onDelete }: ProjectIte
                         </div>
                     )}
                     <div className={styled.bodyUrlWrapper}>
-                        {project.projectUrl && <a href={project.projectUrl} target='_blank'>Github</a>}
-                        {project.additionalUrl && <a href={project.additionalUrl} target='_blank'>Link</a>}
+                        {project.projectUrl && <a href={project.projectUrl} target='_blank' onClick={handleHref}>Github</a>}
+                        {project.additionalUrl && <a href={project.additionalUrl} target='_blank' onClick={handleHref}>Link</a>}
                     </div>
                     <div className={styled.bodyMarkdownWrapper}>
                         <MarkdownPreview markdown={project.content} />
