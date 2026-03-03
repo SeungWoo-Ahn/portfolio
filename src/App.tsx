@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <ToastContainer 
-        position='bottom-right'
+        position='top-center'
         newestOnTop={true}
         limit={3}
         theme='light'/>

@@ -1,11 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { authRepository } from "../../data/authRepository";
 import type { LoginRequest } from "../../types/domain/authTypes";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldErrors } from "react-hook-form";
 import TextInput from "../Form/Input/TextInput";
 import SubmitButton from "../Form/Button/SubmitButton";
 import type { MouseEvent, RefObject } from "react";
 import styled from './LoginFormDialog.module.css';
+import { useToast } from "../../hooks/useToast";
 
 interface LoginFormDialogProps {
     ref: RefObject<HTMLDialogElement | null>;
@@ -15,6 +16,7 @@ interface LoginFormDialogProps {
 
 const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps) => {
     const { register, handleSubmit, reset } = useForm<LoginRequest>();
+    const { showToast } = useToast();
 
     const mututation = useMutation({
         mutationFn: (request: LoginRequest) => authRepository.login(request),
@@ -22,12 +24,16 @@ const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps)
             dismiss();
             reset();
         },
-        onError: (error) => { alert(error.message) }
     });
 
     const onLogin = (request: LoginRequest) => {
         mututation.mutate(request);
     };
+
+    const onLoginIvalid = (errors: FieldErrors) => {
+        const e = Object.values(errors);
+        showToast('error', e[0]?.message as string);
+    }
 
     return (
         <dialog
@@ -40,7 +46,7 @@ const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps)
                 <h3 className={styled.title}>LOGIN</h3>
                 <form
                     className={styled.form}
-                    onSubmit={handleSubmit(onLogin)}>
+                    onSubmit={handleSubmit(onLogin, onLoginIvalid)}>
                     <div className={styled.inputWrapper}>
                         <label className={styled.label}>EMAIL</label>
                         <TextInput

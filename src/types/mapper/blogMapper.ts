@@ -2,7 +2,7 @@ import type { BlogPost, BlogPostCreateRequest } from "../domain/blogTypes";
 import type { BlogPostCreatePayload, BlogPostUiModel } from "../uiModel/blogUiModel";
 import { dateMapper } from "./dateMapper";
 
-const DEFAULT_COVER_IMAGE_URL = 'https://m.health.chosun.com/site/data/img_dir/2025/04/08/2025040803041_0.jpg';
+const DEFAULT_COVER_IMAGE_URL = 'https://eiqvnnueodtphwvyxtci.supabase.co/storage/v1/object/public/admin/default.png';
 
 const getSummary = (content: string): string => {
     if (!content) return '';

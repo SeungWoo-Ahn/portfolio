@@ -8,10 +8,12 @@ import { userRepository } from '../../../data/userRepository';
 import { userMapper } from '../../../types/mapper/userMapper';
 import { QUERY_KEYS } from '../../../consts/QueryKeys';
 import { forwardRef } from 'react';
+import { useToast } from '../../../hooks/useToast';
 
 const AboutSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
     const { isLoggedIn } = useAuth();
     const { dialogRef, showDialog, dismissDialog, handleBackDrop } = useDialog();
+    const { showToast } = useToast();
 
     const { data } = useQuery({
         queryKey: QUERY_KEYS.users.skillSets,
@@ -21,7 +23,9 @@ const AboutSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
 
     const logoutMutation = useMutation({
         mutationFn: authRepository.logout,
-        onError: (error) => { console.log(error.message) }
+        onSuccess: () => {
+            showToast('success', '로그아웃했습니다')
+        }
     });
 
     const onNameClick = () => {
@@ -35,6 +39,7 @@ const AboutSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
     const onEmailClick = async (email: string) => {
         try {
             await navigator.clipboard.writeText(email);
+            showToast('info', '클립보드에 복사되었습니다')
         } catch (error) {
             alert(error);
         }
