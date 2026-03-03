@@ -124,10 +124,25 @@
     }
 
     .headerBottom {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .bodyContent {
         width: 100%;
     }
+}
+
+@media (max-width: 768px) {
+    .article {
+        margin-top: -36px;
+
+        &:hover {
+            transform: translateY(-36px);
+        }
+    }
+
+    .headerTitle {
+        font-size: 48px;
+    }
+
 }

@@ -25,7 +25,9 @@ const BlogPostItem = ({ blogPost, showManageButton, onDelete }: BlogPostItemProp
             <div className={`${styled.header} ${expanded ? styled.expanded : ''}`}>
                 <div className={styled.headerContent}>
                     <div className={styled.headerTop}>
-                        <h3 className={`${styled.title} ${expanded ? styled.expanded : ''}`}>예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀</h3>
+                        <h3 className={`${styled.title} ${expanded ? styled.expanded : ''}`}>
+                            {blogPost.title}
+                        </h3>
                         <p className={styled.summary}>{blogPost.summary}</p>
                     </div>
                     <p className={styled.headerBottom}>{blogPost.createdAt}</p>
