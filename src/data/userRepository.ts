@@ -11,11 +11,10 @@ export const userRepository: UserRepository = {
                 field: 'Android',
                 stacks: [
                     'Kotlin',
-                    'Coroutines',
+                    'Coroutines/Flow',
                     'Hilt',
-                    'Viewmodel',
-                    'Room',
-                    'Retrofit/Ktor'
+                    'Jetpack Compose/Viewmodel/Room',
+                    'Retrofit2/Ktor'
                 ],
             },
             {
