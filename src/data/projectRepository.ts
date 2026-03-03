@@ -1,4 +1,5 @@
 import type { Project, ProjectCreateRequest } from "../types/domain/projectTypes";
+import { wrapDatabaseError } from "./error/errorHandlers";
 import { supabaseClient } from "./supabase";
 
 export const PROJECT_TABLE_NAME = 'projects';
@@ -20,14 +21,18 @@ export const projectRepository: ProjectRepository = {
         const { error } = await supabaseClient
             .from(PROJECT_TABLE_NAME)
             .insert(request);
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
     },
     getProjects: async (): Promise<Project[]> => {
         const { data, error } = await supabaseClient
             .from(PROJECT_TABLE_NAME)
             .select('*')
             .order('start_date', { ascending: false });
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
         return data as Project[];
     },
     getProject: async (id: number): Promise<Project> => {
@@ -36,7 +41,9 @@ export const projectRepository: ProjectRepository = {
             .select('*')
             .eq('id', id)
             .single();
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
         return data as Project;
     },
     updateProject: async (id: number, request: ProjectCreateRequest): Promise<void> => {
@@ -44,13 +51,17 @@ export const projectRepository: ProjectRepository = {
             .from(PROJECT_TABLE_NAME)
             .update(request)
             .eq('id', id);
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
     },
     deleteProject: async (id: number): Promise<void> => {
         const { error } = await supabaseClient
             .from(PROJECT_TABLE_NAME)
             .delete()
             .eq('id', id);
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
     }
 }

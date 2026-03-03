@@ -8,10 +8,12 @@ import styled from '../Home.module.css'
 import { Link } from "react-router-dom";
 import { PATHS } from "../../../consts/Paths";
 import { forwardRef } from "react";
+import { useToast } from "../../../hooks/useToast";
 
 const ProjectsSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
     const { isLoggedIn } = useAuth();
     const queryClient = useQueryClient();
+    const { showToast } = useToast();
 
     const { data } = useQuery({
         queryKey: QUERY_KEYS.projects.all,
@@ -24,9 +26,9 @@ const ProjectsSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
         onSuccess: async () => {
             await queryClient.invalidateQueries({
                 queryKey: QUERY_KEYS.projects.all,
-            })
+            });
+            showToast('success', '프로젝트를 삭제했습니다');
         },
-        onError: (error) => { alert(error.message) }
     });
 
     const onDelete = (id: number) => {

@@ -8,10 +8,12 @@ import BlogPostItem from "./BlogPostItem/BlogPostItem";
 import { Link } from "react-router-dom";
 import { PATHS } from "../../../consts/Paths";
 import { forwardRef } from "react";
+import { useToast } from "../../../hooks/useToast";
 
 const BlogPostsSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
     const { isLoggedIn } = useAuth();
     const queryClient = useQueryClient();
+    const { showToast } = useToast();
 
     const { data } = useQuery({
         queryKey: QUERY_KEYS.blogs.all,
@@ -24,9 +26,9 @@ const BlogPostsSection = forwardRef<HTMLDivElement, {}>((_, ref) => {
         onSuccess: async () => {
             await queryClient.invalidateQueries({
                 queryKey: QUERY_KEYS.blogs.all,
-            })
+            });
+            showToast('success', '포스팅을 삭제했습니다');
         },
-        onError: (error) => { alert(error.message) }
     });
 
     const onDelete = (id: number) => {

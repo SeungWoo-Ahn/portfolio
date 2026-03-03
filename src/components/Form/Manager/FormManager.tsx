@@ -17,6 +17,7 @@ const FormManager = ({ isLoading }: FormManagerProps) => {
         <div className={styled.container}>
             <button 
                 className={styled.backButton}
+                type='button'
                 onClick={onBack}>
                 ← 나가기
             </button>

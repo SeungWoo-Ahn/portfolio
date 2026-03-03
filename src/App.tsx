@@ -10,7 +10,7 @@ function App() {
     <>
       <ToastContainer 
         position='top-center'
-        newestOnTop={true}
+        newestOnTop
         limit={3}
         theme='light'/>
       <BrowserRouter>

@@ -1,4 +1,5 @@
 import type { BlogPost, BlogPostCreateRequest } from "../types/domain/blogTypes";
+import { wrapDatabaseError } from "./error/errorHandlers";
 import { supabaseClient } from "./supabase";
 
 export const BLOG_TABLE_NAME = 'posts';
@@ -20,14 +21,18 @@ export const blogRepository: BlogRepository = {
         const { error } = await supabaseClient
             .from(BLOG_TABLE_NAME)
             .insert(request);
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
     },
     getBlogPosts: async (): Promise<BlogPost[]> => {
         const { data, error } = await supabaseClient
             .from(BLOG_TABLE_NAME)
             .select('*')
             .order('created_at', { ascending: false });
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
         return data as BlogPost[];
     },
     getBlogPost: async (id: number): Promise<BlogPost> => {
@@ -36,7 +41,9 @@ export const blogRepository: BlogRepository = {
             .select('*')
             .eq('id', id)
             .single();
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
         return data as BlogPost;
     },
     updateBlogPost: async (id: number, request: BlogPostCreateRequest): Promise<void> => {
@@ -44,13 +51,17 @@ export const blogRepository: BlogRepository = {
             .from(BLOG_TABLE_NAME)
             .update(request)
             .eq('id', id);
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
     },
     deleteBlogPost: async (id: number): Promise<void> => {
         const { error } = await supabaseClient
             .from(BLOG_TABLE_NAME)
             .delete()
             .eq('id', id);
-        if (error) throw error;
+        if (error) {
+            throw wrapDatabaseError(error);
+        };
     }
 }
