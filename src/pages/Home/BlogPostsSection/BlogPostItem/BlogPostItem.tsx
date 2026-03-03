@@ -24,17 +24,15 @@ const BlogPostItem = ({ blogPost }: BlogPostItemProps) => {
                 <div className={styled.headerContent}>
                     <div className={styled.headerTop}>
                         <h3 className={`${styled.title} ${expanded ? styled.expanded : ''}`}>예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀예시 타이틀</h3>
-                        {!expanded && <p className={styled.summary}>{blogPost.content}</p>}
+                        <p className={styled.summary}>{blogPost.summary}</p>
                     </div>
                     <p className={styled.headerBottom}>{blogPost.createdAt}</p>
                 </div>
-                {!expanded && (
-                    <img
+                <img
                         className={styled.headerImage}
-                        src='https://m.health.chosun.com/site/data/img_dir/2025/04/08/2025040803041_0.jpg'
+                        src={blogPost.coverImageUrl}
                         alt='cover-image'
                         loading='lazy' />
-                )}
             </div>
             <div className={`${styled.body} ${expanded ? styled.expanded : ''}`}>
                 <div className={styled.bodyContent}>
