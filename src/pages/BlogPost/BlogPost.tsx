@@ -101,7 +101,7 @@ const BlogPost = () => {
         }
     }
 
-    const onSubmitIvalid = (errors: FieldErrors) => {
+    const onSubmitInvalid = (errors: FieldErrors) => {
         const e = Object.values(errors);
         showToast('error', e[0]?.message as string);
     }
@@ -110,7 +110,7 @@ const BlogPost = () => {
         <div className={styled.container}>
             <form
                 className={styled.form}
-                onSubmit={handleSubmit(onSubmit, onSubmitIvalid)}>
+                onSubmit={handleSubmit(onSubmit, onSubmitInvalid)}>
                 <div className={styled.inputWrapper}>
                     <TextInput
                         type='text'

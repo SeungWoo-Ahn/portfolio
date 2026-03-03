@@ -73,7 +73,6 @@ const ProjectPost = () => {
             showToast('success', '프로젝트를 추가했습니다');
             navigate(PATHS.HOME);
         },
-        onError: (error) => { alert(error.message) }
     });
 
     const updateMutation = useMutation({
@@ -86,7 +85,6 @@ const ProjectPost = () => {
             showToast('success', '프로젝트를 수정했습니다');
             navigate(PATHS.HOME);
         },
-        onError: (error) => { alert(error.message) }
     });
 
     const isLoading = imageUploadPending &&
@@ -119,14 +117,14 @@ const ProjectPost = () => {
         }
     }
 
-    const onSubmitIvalid = (errors: FieldErrors) => {
+    const onSubmitInvalid = (errors: FieldErrors) => {
         const e = Object.values(errors);
         showToast('error', e[0]?.message as string);
     }
 
     return (
         <div className={styled.container}>
-            <form className={styled.form} onSubmit={handleSubmit(onSubmit, onSubmitIvalid)}>
+            <form className={styled.form} onSubmit={handleSubmit(onSubmit, onSubmitInvalid)}>
                 <div className={styled.inputWrapper}>
                     <TextInput
                         type='text'
