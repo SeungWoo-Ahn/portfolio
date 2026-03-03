@@ -7,14 +7,13 @@ import TextInput from "../../components/Form/Input/TextInput";
 import FormManager from "../../components/Form/Manager/FormManager";
 import TextArea from "../../components/Form/TextArea/TextArea";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
-import { PATHS } from "../../consts/Paths";
 import { QUERY_KEYS } from "../../consts/QueryKeys";
 import { blogRepository } from "../../data/blogRepository";
 import { useImageUpload } from "../../hooks/useImageUpload";
+import { useToast } from "../../hooks/useToast";
 import { blogMapper } from "../../types/mapper/blogMapper";
 import type { BlogPostCreatePayload } from "../../types/uiModel/blogUiModel";
 import styled from './BlogPost.module.css';
-import { useToast } from "../../hooks/useToast";
 
 const BlogPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -47,28 +46,24 @@ const BlogPost = () => {
         }
     }, [data, editMode]);
 
+    const handleSuccess = async (message: string) => {
+        await queryClient.invalidateQueries({
+            queryKey: QUERY_KEYS.blogs.all,
+        });
+        showToast('success', message);
+        navigate(-1);
+    }
+
     const createMutation = useMutation({
         mutationFn: (payload: BlogPostCreatePayload) =>
             blogRepository.createBlogPost(blogMapper.toRequest(payload)),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.blogs.all,
-            });
-            showToast('success', '포스트를 추가했습니다');
-            navigate(PATHS.HOME);
-        },
+        onSuccess: () => handleSuccess('포스트를 추가했습니다'),
     });
 
     const updateMutation = useMutation({
         mutationFn: ({ id, payload }: { id: number, payload: BlogPostCreatePayload }) =>
             blogRepository.updateBlogPost(id, blogMapper.toRequest(payload)),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.blogs.all,
-            });
-            showToast('success', '포스트를 수정했습니다');
-            navigate(PATHS.HOME);
-        },
+        onSuccess: () => handleSuccess('포스트를 생성했습니다'),
     });
 
     const isLoading = imageUploadPending &&

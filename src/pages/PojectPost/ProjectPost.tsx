@@ -9,14 +9,13 @@ import TextInput from "../../components/Form/Input/TextInput";
 import FormManager from "../../components/Form/Manager/FormManager";
 import TextArea from "../../components/Form/TextArea/TextArea";
 import MarkdownPreview from "../../components/MarkdownPreview/MarkdownPreview";
-import { PATHS } from "../../consts/Paths";
 import { QUERY_KEYS } from "../../consts/QueryKeys";
 import { projectRepository } from "../../data/projectRepository";
 import { useImageUpload } from "../../hooks/useImageUpload";
+import { useToast } from "../../hooks/useToast";
 import { projectCategoryEntries, projectMapper, projectStatusEntries } from "../../types/mapper/projectMapper";
 import type { ProjectCreatePayload } from "../../types/uiModel/projectUiModel";
 import styled from './ProjectPost.module.css';
-import { useToast } from "../../hooks/useToast";
 
 const ProjectPost = () => {
     const { id } = useParams<{ id: string }>();
@@ -53,7 +52,7 @@ const ProjectPost = () => {
             alert('데이터 로드에 실패했어요');
             navigate(-1);
         }
-    }, [isError, navigate])
+    }, [isError, navigate]);
 
 
     useEffect(() => {
@@ -63,28 +62,24 @@ const ProjectPost = () => {
         }
     }, [data, editMode, reset]);
 
+    const handleSuccess = async (message: string) => {
+                    await queryClient.invalidateQueries({
+                queryKey: QUERY_KEYS.projects.all,
+            });
+            showToast('success', message);
+            navigate(-1);
+    }
+
     const createMutation = useMutation({
         mutationFn: (payload: ProjectCreatePayload) =>
             projectRepository.createProject(projectMapper.toRequest(payload)),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.projects.all,
-            });
-            showToast('success', '프로젝트를 추가했습니다');
-            navigate(PATHS.HOME);
-        },
+        onSuccess: () => handleSuccess('프로젝트를 추가했습니다'),
     });
 
     const updateMutation = useMutation({
         mutationFn: ({ id, payload }: { id: number, payload: ProjectCreatePayload }) =>
             projectRepository.updateProject(id, projectMapper.toRequest(payload)),
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: QUERY_KEYS.projects.all,
-            });
-            showToast('success', '프로젝트를 수정했습니다');
-            navigate(PATHS.HOME);
-        },
+        onSuccess: () => handleSuccess('프로젝트를 수정했습니다'),
     });
 
     const isLoading = imageUploadPending &&
