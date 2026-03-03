@@ -93,13 +93,12 @@
     align-items: center;
     gap: 16px;
     font-size: 16px;
-    font-weight: 300;
     text-decoration: underline;
     color: var(--color-primary);
 }
 
 .bodyMarkdownWrapper {
-    padding: 16px 0;
+    padding: 32px 0;
 }
 
 @media (max-width: 1024px) {
@@ -130,41 +129,5 @@
 
     .bodyContent {
         width: 100%;
-    }
-}
-
-@media (max-width: 767px) {
-    .article {
-        margin-top: -20px;
-
-        &:hover {
-            transform: translateY(-20px);
-        }
-    }
-
-    .headerTop {
-        gap: 4px;
-    }
-
-    .headerTitle {
-        font-size: 32px;
-    }
-
-    .headerChip {
-        font-size: 6px;
-        padding: 4px 6px;
-        margin-top: 6px;
-    }
-
-    .headerBottom {
-        font-size: 6px;
-    }
-
-    .bodyManageWrapper {
-        font-size: 12px;
-    }
-
-    .bodyUrlWrapper {
-        font-size: 12px;
     }
 }

@@ -23,6 +23,7 @@ const LoginFormDialog = ({ ref, dismiss, handleBackDrop }: LoginFormDialogProps)
         onSuccess: () => {
             dismiss();
             reset();
+            showToast('success', '로그인했습니다');
         },
     });
 
