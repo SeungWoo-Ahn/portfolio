@@ -4,7 +4,7 @@ import imageCompression, { type Options } from "browser-image-compression";
 
 const DEFAULT_COMPRESS_OPTIONS: Options = {
     maxSizeMB: 2,
-    maxWidthOrHeight: 1920,
+    maxWidthOrHeight: 1024,
 };
 
 export const useImageUpload = () => {
